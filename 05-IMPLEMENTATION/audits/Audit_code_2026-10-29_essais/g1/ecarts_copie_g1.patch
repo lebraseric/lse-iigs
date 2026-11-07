@@ -1,0 +1,12 @@
+--- build/Makefile	2026-10-29 11:56:52.794054155 +0100
++++ copie/build/Makefile	2026-10-29 14:21:10.829267521 +0100
+@@ -321,3 +321,9 @@
+ clean:
+ 	rm -f *.root *.a *.sym $(PROGRAMME) $(IMAGE)
+ 	rm -rf $(TESTS_BIN)
++
++# --- essai de l'audit du groupe 1 (copie de travail) ---
++$(TESTS_BIN)/composants_audit_g1: $(TST)/composants/composants_audit_g1.c $(TST)/composants/compilateur_outils.h $(TST)/commun/verif.h $(INTERFACES) compilateur.a programme.a interprete.a bibliotheque.a fichiers.a fichiers_iigs.a contexte_exec.a pile.a donnees.a decompilateur.a rcim.a symboles.a erreurs.a objets.a memoire_iigs.a $(TESTS_BIN)/console_bouchon.a $(TESTS_BIN)/horloge_bouchon.a
++	mkdir -p $(TESTS_BIN)
++	cd $(TST)/composants && $(IIX) compile $(CFLAGS) $(PROFILFLAG) composants_audit_g1.c keep=../../build/$(TESTS_BIN)/composants_audit_g1
++	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/composants_audit_g1 compilateur programme interprete bibliotheque fichiers fichiers_iigs contexte_exec pile donnees decompilateur $(TESTS_BIN)/console_bouchon $(TESTS_BIN)/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=$(TESTS_BIN)/composants_audit_g1

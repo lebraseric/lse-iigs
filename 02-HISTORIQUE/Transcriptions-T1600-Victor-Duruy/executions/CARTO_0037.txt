@@ -1,0 +1,45 @@
+{EX}ECUTER A PARTIR DE {1}
+
+
+
+
+
+
+
+
+
+
+
+                                    SURPRISE
+                                    ========
+
+
+
+
+
+
+
+
+
+
+QUEL EST TON NOM ?={ERIC LE BRAS}
+QUEL METIER VOUDRAIS-TU FAIRE ?={INFORMATICIEN}
+QUELLE EST TON ADRESSE ?={191 RUE D'ALESIA - PARIS XIV}
+TAPE G SI TU ES UN GARCON ET F SI TU ES UNE FILLE ={G}
+
+
+
+
+   VOICI TA CARTE DE VISITE PERSONELLE.
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+   MONSIEUR ERIC LE BRAS
+
+   191 RUE D'ALESIA - PARIS XIV
+  FUTUR INFORMATICIEN CHEZ LUI.
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+TERMINE EN LIGNE 055

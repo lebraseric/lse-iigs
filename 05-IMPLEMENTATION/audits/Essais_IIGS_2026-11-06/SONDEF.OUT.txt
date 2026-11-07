@@ -1,0 +1,53 @@
+SONDE PERIPHERIQUES
+  ExpandPath @:LSE : erreur $0000, :BYTEWORKS:ORCA:LSE
+  DInfo 1 a 32 ...
+    1 .DEV1 car $43E4 blocs 65532 empl 15 unite 1 type $0002
+    2 .APPLEDISK3.5A car $0BEC blocs 1600 empl 5 unite 1 type $0003
+    3 .APPLEDISK3.5B car $0BEC blocs 1600 empl 5 unite 2 type $0003
+    4 .APPLEDISK5.25A car $0BEC blocs 280 empl 6 unite 1 type $0000
+    5 .APPLEDISK5.25B car $0BEC blocs 280 empl 6 unite 2 type $0000
+    6 .CONSOLE car $0F60 blocs 0 empl 32771 unite 1 type $000A
+    7 .DEV2 car $43E4 blocs 65535 empl 15 unite 2 type $0002
+    8 .DEV3 car $43E4 blocs 65535 empl 15 unite 3 type $0002
+    9 .DEV4 car $43E4 blocs 65535 empl 15 unite 4 type $0002
+    10 .DEV5 car $43E4 blocs 65535 empl 15 unite 5 type $0002
+    11 .DEV6 car $43E4 blocs 65535 empl 15 unite 6 type $0002
+    12 .DEV7 car $43E4 blocs 65535 empl 15 unite 7 type $0002
+    13 .DEV8 car $43E4 blocs 65535 empl 15 unite 8 type $0002
+    14 .DEV9 car $43E4 blocs 65535 empl 15 unite 9 type $0002
+    15 .DEV10 car $43E4 blocs 65535 empl 15 unite 10 type $0002
+    16 .DEV11 car $43E4 blocs 65535 empl 15 unite 11 type $0002
+    17 .DEV12 car $43E4 blocs 65535 empl 15 unite 12 type $0002
+    18 .DEV13 car $43E4 blocs 65535 empl 15 unite 13 type $0002
+    19 .DEV14 car $43E4 blocs 65535 empl 15 unite 14 type $0002
+    20 .DEV15 car $43E4 blocs 65535 empl 15 unite 15 type $0002
+    21 .DEV16 car $43E4 blocs 65535 empl 15 unite 16 type $0002
+    22 .DEV17 car $43E4 blocs 65535 empl 15 unite 17 type $0002
+    23 .DEV18 car $43E4 blocs 65535 empl 15 unite 18 type $0002
+    24 .DEV19 car $43E4 blocs 65535 empl 15 unite 19 type $0002
+    25 .DEV20 car $43E4 blocs 65535 empl 15 unite 20 type $0002
+    26 .DEV21 car $43E4 blocs 65535 empl 15 unite 21 type $0002
+    27 .DEV22 car $43E4 blocs 65535 empl 15 unite 22 type $0002
+    28 .DEV23 car $43E4 blocs 65535 empl 15 unite 23 type $0002
+    29 .DEV24 car $43E4 blocs 65535 empl 15 unite 24 type $0002
+    30 .DEV25 car $43E4 blocs 65535 empl 15 unite 25 type $0002
+    31 .DEV26 car $43E4 blocs 65535 empl 15 unite 26 type $0002
+    32 .DEV27 car $43E4 blocs 65535 empl 15 unite 27 type $0002
+    duree : 135 tops, 2250 ms
+  GetDevNumber :BYTEWORKS ...
+    duree : 0 tops, 0 ms
+    erreur $0000, numero 7
+  GetDevNumber BYTEWORKS ...
+    duree : 1 tops, 16 ms
+    erreur $0040, numero 0
+  GetDevNumber :BYTEWORKS:ORCA:LSE ...
+    duree : 0 tops, 0 ms
+    erreur $0000, numero 7
+  DInfo et Volume sur le numero obtenu ...
+    duree : 0 tops, 0 ms
+    7 .DEV2 : erreur $0000, :ByteWorks, total 65535, libres 4610, bloc 512
+    secteurs libres : 9220
+  GetDevNumber :ZZSONDEABSENT ...
+    duree : 1794 tops, 29900 ms
+    erreur $0045, numero 0
+FIN SONDE PERIPHERIQUES

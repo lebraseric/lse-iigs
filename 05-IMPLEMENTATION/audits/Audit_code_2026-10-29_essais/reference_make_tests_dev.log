@@ -1,0 +1,174 @@
+mkdir -p tests
+cd ../tests/representation && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 types_plateforme.c keep=../../build/tests/types_plateforme
+iix -DKeepType=EXE link -P tests/types_plateforme keep=tests/types_plateforme
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 objets.c keep=../../build/objets
+cd ../src/plateforme && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 memoire_iigs.c keep=../../build/memoire_iigs
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_objets.c keep=../../build/tests/composants_objets
+iix -DKeepType=EXE link -P tests/composants_objets objets memoire_iigs keep=tests/composants_objets
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 rcim.c keep=../../build/rcim
+mkdir -p tests
+cd ../tests/representation && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 representation_rcim.c keep=../../build/tests/representation_rcim
+iix -DKeepType=EXE link -P tests/representation_rcim rcim keep=tests/representation_rcim
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 symboles.c keep=../../build/symboles
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_symboles.c keep=../../build/tests/composants_symboles
+iix -DKeepType=EXE link -P tests/composants_symboles symboles objets memoire_iigs keep=tests/composants_symboles
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 erreurs.c keep=../../build/erreurs
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_erreurs.c keep=../../build/tests/composants_erreurs
+iix -DKeepType=EXE link -P tests/composants_erreurs erreurs keep=tests/composants_erreurs
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 compilateur.c keep=../../build/compilateur
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_compilateur_2a.c keep=../../build/tests/composants_compilateur_2a
+iix -DKeepType=EXE link -P tests/composants_compilateur_2a compilateur rcim symboles erreurs objets memoire_iigs keep=tests/composants_compilateur_2a
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_compilateur_2b.c keep=../../build/tests/composants_compilateur_2b
+iix -DKeepType=EXE link -P tests/composants_compilateur_2b compilateur rcim symboles erreurs objets memoire_iigs keep=tests/composants_compilateur_2b
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_compilateur_2c.c keep=../../build/tests/composants_compilateur_2c
+iix -DKeepType=EXE link -P tests/composants_compilateur_2c compilateur rcim symboles erreurs objets memoire_iigs keep=tests/composants_compilateur_2c
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_compilateur_2d.c keep=../../build/tests/composants_compilateur_2d
+iix -DKeepType=EXE link -P tests/composants_compilateur_2d compilateur rcim symboles erreurs objets memoire_iigs keep=tests/composants_compilateur_2d
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_compilateur_t1600.c keep=../../build/tests/composants_compilateur_t1600
+iix -DKeepType=EXE link -P tests/composants_compilateur_t1600 compilateur rcim symboles erreurs objets memoire_iigs keep=tests/composants_compilateur_t1600
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_compilateur_limites.c keep=../../build/tests/composants_compilateur_limites
+iix -DKeepType=EXE link -P tests/composants_compilateur_limites compilateur rcim symboles erreurs objets memoire_iigs keep=tests/composants_compilateur_limites
+mkdir -p tests
+cd ../tests/historiques && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 historiques_erreurs.c keep=../../build/tests/historiques_erreurs
+iix -DKeepType=EXE link -P tests/historiques_erreurs compilateur rcim symboles erreurs objets memoire_iigs keep=tests/historiques_erreurs
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 decompilateur.c keep=../../build/decompilateur
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_decompilateur.c keep=../../build/tests/composants_decompilateur
+iix -DKeepType=EXE link -P tests/composants_decompilateur compilateur decompilateur rcim symboles erreurs objets memoire_iigs keep=tests/composants_decompilateur
+mkdir -p tests
+cd ../tests/historiques && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 historiques_decompilation.c keep=../../build/tests/historiques_decompilation
+iix -DKeepType=EXE link -P tests/historiques_decompilation compilateur decompilateur rcim symboles erreurs objets memoire_iigs keep=tests/historiques_decompilation
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 programme.c keep=../../build/programme
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_programme.c keep=../../build/tests/composants_programme
+iix -DKeepType=EXE link -P tests/composants_programme compilateur programme rcim symboles erreurs objets memoire_iigs keep=tests/composants_programme
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 contexte_exec.c keep=../../build/contexte_exec
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 pile.c keep=../../build/pile
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 donnees.c keep=../../build/donnees
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_contexte.c keep=../../build/tests/composants_contexte
+iix -DKeepType=EXE link -P tests/composants_contexte compilateur programme contexte_exec pile donnees decompilateur rcim symboles erreurs objets memoire_iigs keep=tests/composants_contexte
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_donnees.c keep=../../build/tests/composants_donnees
+iix -DKeepType=EXE link -P tests/composants_donnees donnees decompilateur rcim symboles erreurs objets memoire_iigs keep=tests/composants_donnees
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 interprete.c keep=../../build/interprete
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 bibliotheque.c keep=../../build/bibliotheque
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 fichiers.c keep=../../build/fichiers
+cd ../src/plateforme && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 fichiers_iigs.c keep=../../build/fichiers_iigs
+mkdir -p tests
+cd ../tests/bouchons && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 console_bouchon.c keep=../../build/tests/console_bouchon
+mkdir -p tests
+cd ../tests/bouchons && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 horloge_bouchon.c keep=../../build/tests/horloge_bouchon
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_interprete.c keep=../../build/tests/composants_interprete
+iix -DKeepType=EXE link -P tests/composants_interprete compilateur programme interprete bibliotheque fichiers fichiers_iigs contexte_exec pile donnees decompilateur tests/console_bouchon tests/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=tests/composants_interprete
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_entrees_sorties.c keep=../../build/tests/composants_entrees_sorties
+iix -DKeepType=EXE link -P tests/composants_entrees_sorties compilateur programme interprete bibliotheque fichiers fichiers_iigs contexte_exec pile donnees decompilateur tests/console_bouchon tests/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=tests/composants_entrees_sorties
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_horloge.c keep=../../build/tests/composants_horloge
+iix -DKeepType=EXE link -P tests/composants_horloge compilateur programme interprete bibliotheque fichiers fichiers_iigs contexte_exec pile donnees decompilateur tests/console_bouchon tests/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=tests/composants_horloge
+cd ../src/plateforme && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 horloge_iigs.c keep=../../build/horloge_iigs
+mkdir -p tests
+cd ../tests/plateforme && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 plateforme_horloge.c keep=../../build/tests/plateforme_horloge
+iix -DKeepType=EXE link -P tests/plateforme_horloge horloge_iigs keep=tests/plateforme_horloge
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 analyseur.c keep=../../build/analyseur
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_analyseur.c keep=../../build/tests/composants_analyseur
+iix -DKeepType=EXE link -P tests/composants_analyseur analyseur keep=tests/composants_analyseur
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 moniteur.c keep=../../build/moniteur
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 codage.c keep=../../build/codage
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 ruban.c keep=../../build/ruban
+cd ../src/noyau && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 taches.c keep=../../build/taches
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_moniteur.c keep=../../build/tests/composants_moniteur
+iix -DKeepType=EXE link -P tests/composants_moniteur moniteur analyseur compilateur programme interprete bibliotheque fichiers codage ruban taches fichiers_iigs contexte_exec pile donnees decompilateur tests/console_bouchon tests/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=tests/composants_moniteur
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_nombres.c keep=../../build/tests/composants_nombres
+iix -DKeepType=EXE link -P tests/composants_nombres donnees decompilateur rcim symboles erreurs objets memoire_iigs keep=tests/composants_nombres
+mkdir -p tests
+cd ../tests/plateforme && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 plateforme_fichiers.c keep=../../build/tests/plateforme_fichiers
+iix -DKeepType=EXE link -P tests/plateforme_fichiers fichiers_iigs keep=tests/plateforme_fichiers
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_bibliotheque.c keep=../../build/tests/composants_bibliotheque
+iix -DKeepType=EXE link -P tests/composants_bibliotheque compilateur programme interprete bibliotheque fichiers fichiers_iigs contexte_exec pile donnees decompilateur tests/console_bouchon tests/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=tests/composants_bibliotheque
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_fichiers.c keep=../../build/tests/composants_fichiers
+iix -DKeepType=EXE link -P tests/composants_fichiers compilateur programme interprete bibliotheque fichiers fichiers_iigs contexte_exec pile donnees decompilateur tests/console_bouchon tests/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=tests/composants_fichiers
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_codage.c keep=../../build/tests/composants_codage
+iix -DKeepType=EXE link -P tests/composants_codage codage compilateur programme bibliotheque fichiers fichiers_iigs contexte_exec pile donnees decompilateur tests/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=tests/composants_codage
+mkdir -p tests
+cd ../tests/composants && iix compile -P -I +T cc=-dLSE_PROFIL_DEV=1 composants_taches.c keep=../../build/tests/composants_taches
+iix -DKeepType=EXE link -P tests/composants_taches taches keep=tests/composants_taches
+SUITE representation/types_plateforme
+SUITE representation/types_plateforme : 21 controle(s), 0 echec(s)
+SUITE composants/objets
+SUITE composants/objets : 52 controle(s), 0 echec(s)
+SUITE representation/rcim
+SUITE representation/rcim : 49 controle(s), 0 echec(s)
+SUITE composants/symboles
+SUITE composants/symboles : 57 controle(s), 0 echec(s)
+SUITE composants/erreurs
+SUITE composants/erreurs : 50 controle(s), 0 echec(s)
+SUITE composants/compilateur 2a
+SUITE composants/compilateur 2a : 104 controle(s), 0 echec(s)
+SUITE composants/compilateur 2b
+SUITE composants/compilateur 2b : 45 controle(s), 0 echec(s)
+SUITE composants/compilateur 2c
+SUITE composants/compilateur 2c : 51 controle(s), 0 echec(s)
+SUITE composants/compilateur 2d
+SUITE composants/compilateur 2d : 37 controle(s), 0 echec(s)
+SUITE composants/compilateur t1600
+SUITE composants/compilateur t1600 : 24 controle(s), 0 echec(s)
+SUITE composants/compilateur limites
+SUITE composants/compilateur limites : 15 controle(s), 0 echec(s)
+SUITE historiques/erreurs de compilation
+SUITE historiques/erreurs de compilation : 11 controle(s), 0 echec(s)
+SUITE composants/decompilateur
+SUITE composants/decompilateur : 134 controle(s), 0 echec(s)
+SUITE historiques/decompilation
+  ../tests/historiques/corpus/inrdp75.txt : 843 lignes, 810 acceptees (2 sous T1600 seulement), 33 rejetees, 0 a constante longue, 0 restituees sur plus de 79 caracteres, 1 normalisees
+  ../tests/historiques/corpus/lse15.txt : 69 lignes, 57 acceptees (0 sous T1600 seulement), 12 rejetees, 0 a constante longue, 0 restituees sur plus de 79 caracteres, 6 normalisees
+SUITE historiques/decompilation : 10 controle(s), 0 echec(s)
+SUITE composants/programme
+SUITE composants/programme : 71 controle(s), 0 echec(s)
+SUITE composants/contexte
+SUITE composants/contexte : 136 controle(s), 0 echec(s)
+SUITE composants/donnees
+SUITE composants/donnees : 105 controle(s), 0 echec(s)
+SUITE composants/interprete
+SUITE composants/interprete : 100 controle(s), 0 echec(s)
+SUITE composants/entrees-sorties
+SUITE composants/entrees-sorties : 43 controle(s), 0 echec(s)
+SUITE composants/horloge
+SUITE composants/horloge : 31 controle(s), 0 echec(s)
+SUITE plateforme/horloge
+  instant lu : 29/10/2026 14:05:05
+SUITE plateforme/horloge : 4 controle(s), 0 echec(s)
+SUITE composants/analyseur
+SUITE composants/analyseur : 35 controle(s), 0 echec(s)
+SUITE composants/moniteur
+SUITE composants/moniteur : 109 controle(s), 0 echec(s)
+SUITE composants/nombres
+SUITE composants/nombres : 9 controle(s), 0 echec(s)
+SUITE plateforme/fichiers
+SUITE plateforme/fichiers : 27 controle(s), 0 echec(s)
+SUITE composants/bibliotheque
+SUITE composants/bibliotheque : 43 controle(s), 0 echec(s)
+SUITE composants/fichiers
+SUITE composants/fichiers : 42 controle(s), 0 echec(s)
+SUITE composants/codage
+SUITE composants/codage : 24 controle(s), 0 echec(s)
+SUITE composants/taches
+SUITE composants/taches : 16 controle(s), 0 echec(s)
+BILAN : 29 suite(s), 0 suite(s) en echec

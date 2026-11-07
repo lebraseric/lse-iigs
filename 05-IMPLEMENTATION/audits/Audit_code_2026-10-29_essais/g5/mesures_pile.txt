@@ -1,0 +1,53 @@
+=== essai_pile (PROFIL=cible)
+scenario 0 (session minimale, k=10) : 1977 octets sous main ; marge restante 14133 octets
+scenario 1 (parentheses imbriquees, k=1) : 2215 octets sous main ; marge restante 13895 octets
+scenario 1 (parentheses imbriquees, k=5) : 3167 octets sous main ; marge restante 12943 octets
+scenario 1 (parentheses imbriquees, k=7) : 3643 octets sous main ; marge restante 12467 octets
+scenario 1 (parentheses imbriquees, k=8) : 3881 octets sous main ; marge restante 12229 octets
+scenario 1 (parentheses imbriquees, k=10) : 4357 octets sous main ; marge restante 11753 octets
+scenario 1 (parentheses imbriquees, k=20) : 6737 octets sous main ; marge restante 9373 octets
+scenario 1 (parentheses imbriquees, k=38) : 11021 octets sous main ; marge restante 5089 octets
+scenario 10 (ligne AFFICHER (...), k=0) : 2007 octets sous main ; marge restante 14103 octets
+scenario 10 (ligne AFFICHER (...), k=5) : 3197 octets sous main ; marge restante 12913 octets
+scenario 9 (ligne A_(...), k=0) : 1074 octets sous main ; marge restante 15036 octets
+scenario 9 (ligne A_(...), k=11) : 3692 octets sous main ; marge restante 12418 octets
+scenario 9 (ligne A_(...), k=12) : 3930 octets sous main ; marge restante 12180 octets
+scenario 2 (SI imbriques (3), k=10) : 3281 octets sous main ; marge restante 12829 octets
+scenario 3 (ABS imbriquees (15), k=10) : 6237 octets sous main ; marge restante 9873 octets
+scenario 4 (programme, LISTER, EXECUTER, k=10) : 6326 octets sous main ; marge restante 9784 octets
+scenario 5 (GARER, CHARGER, CATALOGUER, k=10) : 2239 octets sous main ; marge restante 13871 octets
+scenario 6 (ENCODER, DECODER, k=10) : 5204 octets sous main ; marge restante 10906 octets
+scenario 7 (fonction recursive L.S.E. (25), k=10) : 1957 octets sous main ; marge restante 14153 octets
+scenario 8 (erreur au fond des parentheses, k=37) : 10762 octets sous main ; marge restante 5348 octets
+scenario 11 (LISTER (decompilation, reels), k=10) : 2785 octets sous main ; marge restante 13325 octets
+=== essai_pile4k (PROFIL=cible)
+scenario 0 (session minimale, k=10) : 1977 octets sous main ; marge restante 1848 octets
+scenario 1 (parentheses imbriquees, k=1) : 2215 octets sous main ; marge restante 1610 octets
+scenario 1 (parentheses imbriquees, k=5) : 3167 octets sous main ; marge restante 658 octets
+scenario 1 (parentheses imbriquees, k=7) : 3643 octets sous main ; marge restante 182 octets
+scenario 1 (parentheses imbriquees, k=8) : DEBORDEMENT (SystemError 15)
+scenario 1 (parentheses imbriquees, k=10) : DEBORDEMENT (SystemError 15)
+scenario 1 (parentheses imbriquees, k=20) : DEBORDEMENT (SystemError 15)
+scenario 1 (parentheses imbriquees, k=38) : DEBORDEMENT (SystemError 15)
+scenario 10 (ligne AFFICHER (...), k=0) : 2007 octets sous main ; marge restante 1818 octets
+scenario 10 (ligne AFFICHER (...), k=5) : 3197 octets sous main ; marge restante 628 octets
+scenario 9 (ligne A_(...), k=0) : 1074 octets sous main ; marge restante 2751 octets
+scenario 9 (ligne A_(...), k=11) : 3692 octets sous main ; marge restante 133 octets
+scenario 9 (ligne A_(...), k=12) : DEBORDEMENT (SystemError 15)
+scenario 2 (SI imbriques (3), k=10) : 3281 octets sous main ; marge restante 544 octets
+scenario 3 (ABS imbriquees (15), k=10) : DEBORDEMENT (SystemError 15)
+scenario 4 (programme, LISTER, EXECUTER, k=10) : DEBORDEMENT (SystemError 15)
+scenario 5 (GARER, CHARGER, CATALOGUER, k=10) : 2239 octets sous main ; marge restante 1586 octets
+scenario 6 (ENCODER, DECODER, k=10) : DEBORDEMENT (SystemError 15)
+scenario 7 (fonction recursive L.S.E. (25), k=10) : 1957 octets sous main ; marge restante 1868 octets
+scenario 8 (erreur au fond des parentheses, k=37) : DEBORDEMENT (SystemError 15)
+scenario 11 (LISTER (decompilation, reels), k=10) : 2785 octets sous main ; marge restante 1040 octets
+=== essai_debordement
+Stack overflow
+niveau 320 adresse 000F8A
+niveau 336 adresse 000CBA
+niveau 352 adresse 0009EA
+code 0
+=== essai_atexit
+Stack overflow
+code 255

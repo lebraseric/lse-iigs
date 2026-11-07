@@ -1,0 +1,349 @@
+p  arrondi impression puissances | INRDP75 | NBOR : operations, valeurs
+20 RN      RN         inv     |  3/16 | 12,  4/14
+20 RN      RN         carres  |  3/16 | 12,  4/14
+20 RN      RN         exacte  |  3/16 | 12,  4/14
+20 RN      RZ         inv     |  1/16 | 12,  5/14
+20 RN      RZ         carres  |  1/16 | 12,  5/14
+20 RN      RZ         exacte  |  1/16 | 12,  5/14
+20 RN      ECH        inv     |  2/16 | 12,  4/14
+20 RN      ECH        carres  |  2/16 | 12,  4/14
+20 RN      ECH        exacte  |  2/16 | 12,  4/14
+20 RN      ECH10       inv     |  2/16 | 12,  3/14
+20 RN      ECH10       carres  |  2/16 | 12,  3/14
+20 RN      ECH10       exacte  |  2/16 | 12,  3/14
+20 RN      DIG        inv     |  1/16 | 12,  5/14
+20 RN      DIG        carres  |  1/16 | 12,  5/14
+20 RN      DIG        exacte  |  1/16 | 12,  5/14
+20 RNA     RN         inv     |  3/16 | 13,  4/14
+20 RNA     RN         carres  |  3/16 | 13,  4/14
+20 RNA     RN         exacte  |  3/16 | 13,  4/14
+20 RNA     RZ         inv     |  1/16 | 13,  5/14
+20 RNA     RZ         carres  |  1/16 | 13,  5/14
+20 RNA     RZ         exacte  |  1/16 | 13,  5/14
+20 RNA     ECH        inv     |  2/16 | 13,  3/14
+20 RNA     ECH        carres  |  2/16 | 13,  3/14
+20 RNA     ECH        exacte  |  2/16 | 13,  3/14
+20 RNA     ECH10       inv     |  0/16 | 13,  1/14
+20 RNA     ECH10       carres  |  0/16 | 13,  1/14
+20 RNA     ECH10       exacte  |  0/16 | 13,  1/14
+20 RNA     DIG        inv     |  1/16 | 13,  5/14
+20 RNA     DIG        carres  |  1/16 | 13,  5/14
+20 RNA     DIG        exacte  |  1/16 | 13,  5/14
+20 RZ      RN         inv     |  2/16 | 13,  0/14
+20 RZ      RN         carres  |  2/16 | 13,  0/14
+20 RZ      RN         exacte  |  2/16 | 13,  0/14
+20 RZ      RZ         inv     |  0/16 | 13,  0/14
+20 RZ      RZ         carres  |  0/16 | 13,  0/14
+20 RZ      RZ         exacte  |  0/16 | 13,  0/14
+20 RZ      ECH        inv     |  0/16 | 13,  0/14
+20 RZ      ECH        carres  |  0/16 | 13,  0/14
+20 RZ      ECH        exacte  |  0/16 | 13,  0/14
+20 RZ      ECH10       inv     |  0/16 | 13,  0/14
+20 RZ      ECH10       carres  |  0/16 | 13,  0/14
+20 RZ      ECH10       exacte  |  0/16 | 13,  0/14
+20 RZ      DIG        inv     |  0/16 | 13,  0/14
+20 RZ      DIG        carres  |  0/16 | 13,  0/14
+20 RZ      DIG        exacte  |  0/16 | 13,  0/14
+21 RN      RN         inv     |  5/16 | 13,  5/14
+21 RN      RN         carres  |  5/16 | 13,  5/14
+21 RN      RN         exacte  |  5/16 | 13,  5/14
+21 RN      RZ         inv     |  3/16 | 13,  6/14
+21 RN      RZ         carres  |  3/16 | 13,  6/14
+21 RN      RZ         exacte  |  3/16 | 13,  6/14
+21 RN      ECH        inv     |  5/16 | 13,  8/14
+21 RN      ECH        carres  |  5/16 | 13,  8/14
+21 RN      ECH        exacte  |  5/16 | 13,  8/14
+21 RN      ECH10       inv     |  3/16 | 13,  3/14
+21 RN      ECH10       carres  |  3/16 | 13,  3/14
+21 RN      ECH10       exacte  |  3/16 | 13,  3/14
+21 RN      DIG        inv     |  2/16 | 13,  6/14
+21 RN      DIG        carres  |  2/16 | 13,  6/14
+21 RN      DIG        exacte  |  2/16 | 13,  6/14
+21 RNA     RN         inv     |  5/16 | 13,  6/14
+21 RNA     RN         carres  |  5/16 | 13,  6/14
+21 RNA     RN         exacte  |  5/16 | 13,  6/14
+21 RNA     RZ         inv     |  3/16 | 13,  7/14
+21 RNA     RZ         carres  |  3/16 | 13,  7/14
+21 RNA     RZ         exacte  |  3/16 | 13,  7/14
+21 RNA     ECH        inv     |  5/16 | 13,  8/14
+21 RNA     ECH        carres  |  5/16 | 13,  8/14
+21 RNA     ECH        exacte  |  5/16 | 13,  8/14
+21 RNA     ECH10       inv     |  3/16 | 13,  1/14
+21 RNA     ECH10       carres  |  3/16 | 13,  1/14
+21 RNA     ECH10       exacte  |  3/16 | 13,  1/14
+21 RNA     DIG        inv     |  2/16 | 13,  7/14
+21 RNA     DIG        carres  |  2/16 | 13,  7/14
+21 RNA     DIG        exacte  |  2/16 | 13,  7/14
+21 RZ      RN         inv     |  3/16 | 13,  0/14
+21 RZ      RN         carres  |  3/16 | 13,  0/14
+21 RZ      RN         exacte  |  3/16 | 13,  0/14
+21 RZ      RZ         inv     |  1/16 | 13,  0/14
+21 RZ      RZ         carres  |  1/16 | 13,  0/14
+21 RZ      RZ         exacte  |  1/16 | 13,  0/14
+21 RZ      ECH        inv     |  1/16 | 13,  0/14
+21 RZ      ECH        carres  |  1/16 | 13,  0/14
+21 RZ      ECH        exacte  |  1/16 | 13,  0/14
+21 RZ      ECH10       inv     |  0/16 | 13,  0/14
+21 RZ      ECH10       carres  |  0/16 | 13,  0/14
+21 RZ      ECH10       exacte  |  0/16 | 13,  0/14
+21 RZ      DIG        inv     |  1/16 | 13,  0/14
+21 RZ      DIG        carres  |  1/16 | 13,  0/14
+21 RZ      DIG        exacte  |  1/16 | 13,  0/14
+22 RN      RN         inv     |  3/16 | 13,  5/14
+22 RN      RN         carres  |  3/16 | 13,  5/14
+22 RN      RN         exacte  |  3/16 | 13,  5/14
+22 RN      RZ         inv     |  4/16 | 13,  6/14
+22 RN      RZ         carres  |  4/16 | 13,  6/14
+22 RN      RZ         exacte  |  4/16 | 13,  6/14
+22 RN      ECH        inv     |  2/16 | 13,  5/14
+22 RN      ECH        carres  |  2/16 | 13,  5/14
+22 RN      ECH        exacte  |  2/16 | 13,  5/14
+22 RN      ECH10       inv     |  4/16 | 13,  7/14
+22 RN      ECH10       carres  |  4/16 | 13,  7/14
+22 RN      ECH10       exacte  |  4/16 | 13,  7/14
+22 RN      DIG        inv     |  3/16 | 13,  6/14
+22 RN      DIG        carres  |  3/16 | 13,  6/14
+22 RN      DIG        exacte  |  3/16 | 13,  6/14
+22 RNA     RN         inv     |  3/16 | 14,  9/14
+22 RNA     RN         carres  |  3/16 | 14,  9/14
+22 RNA     RN         exacte  |  3/16 | 14,  9/14
+22 RNA     RZ         inv     |  4/16 | 14, 10/14
+22 RNA     RZ         carres  |  4/16 | 14, 10/14
+22 RNA     RZ         exacte  |  4/16 | 14, 10/14
+22 RNA     ECH        inv     |  2/16 | 14,  9/14
+22 RNA     ECH        carres  |  2/16 | 14,  9/14
+22 RNA     ECH        exacte  |  2/16 | 14,  9/14
+22 RNA     ECH10       inv     |  2/16 | 14,  5/14
+22 RNA     ECH10       carres  |  2/16 | 14,  5/14
+22 RNA     ECH10       exacte  |  2/16 | 14,  5/14
+22 RNA     DIG        inv     |  3/16 | 14, 10/14
+22 RNA     DIG        carres  |  3/16 | 14, 10/14
+22 RNA     DIG        exacte  |  3/16 | 14, 10/14
+22 RZ      RN         inv     |  4/16 | 14,  2/14
+22 RZ      RN         carres  |  4/16 | 14,  2/14
+22 RZ      RN         exacte  |  4/16 | 14,  2/14
+22 RZ      RZ         inv     |  2/16 | 14,  0/14
+22 RZ      RZ         carres  |  2/16 | 14,  0/14
+22 RZ      RZ         exacte  |  2/16 | 14,  0/14
+22 RZ      ECH        inv     |  2/16 | 14,  0/14
+22 RZ      ECH        carres  |  2/16 | 14,  0/14
+22 RZ      ECH        exacte  |  2/16 | 14,  0/14
+22 RZ      ECH10       inv     |  1/16 | 14,  0/14
+22 RZ      ECH10       carres  |  1/16 | 14,  0/14
+22 RZ      ECH10       exacte  |  1/16 | 14,  0/14
+22 RZ      DIG        inv     |  2/16 | 14,  0/14
+22 RZ      DIG        carres  |  2/16 | 14,  0/14
+22 RZ      DIG        exacte  |  2/16 | 14,  0/14
+23 RN      RN         inv     | 11/16 | 13,  8/14
+23 RN      RN         carres  | 12/16 | 13,  8/14
+23 RN      RN         exacte  | 12/16 | 13,  8/14
+23 RN      RZ         inv     | 12/16 | 13,  5/14
+23 RN      RZ         carres  | 12/16 | 13,  5/14
+23 RN      RZ         exacte  | 12/16 | 13,  5/14
+23 RN      ECH        inv     | 13/16 | 13,  6/14
+23 RN      ECH        carres  | 14/16 | 13,  6/14
+23 RN      ECH        exacte  | 14/16 | 13,  6/14
+23 RN      ECH10       inv     |  8/16 | 13,  5/14
+23 RN      ECH10       carres  |  9/16 | 13,  5/14
+23 RN      ECH10       exacte  |  9/16 | 13,  5/14
+23 RN      DIG        inv     | 11/16 | 13,  5/14
+23 RN      DIG        carres  | 12/16 | 13,  5/14
+23 RN      DIG        exacte  | 12/16 | 13,  5/14
+23 RNA     RN         inv     | 11/16 | 14, 13/14
+23 RNA     RN         carres  | 12/16 | 14, 13/14
+23 RNA     RN         exacte  | 12/16 | 14, 13/14
+23 RNA     RZ         inv     | 12/16 | 14,  7/14
+23 RNA     RZ         carres  | 12/16 | 14,  7/14
+23 RNA     RZ         exacte  | 12/16 | 14,  7/14
+23 RNA     ECH        inv     | 13/16 | 14,  9/14
+23 RNA     ECH        carres  | 14/16 | 14,  9/14
+23 RNA     ECH        exacte  | 14/16 | 14,  9/14
+23 RNA     ECH10       inv     | 11/16 | 14, 10/14
+23 RNA     ECH10       carres  | 10/16 | 14, 10/14
+23 RNA     ECH10       exacte  | 10/16 | 14, 10/14
+23 RNA     DIG        inv     | 11/16 | 14,  7/14
+23 RNA     DIG        carres  | 11/16 | 14,  7/14
+23 RNA     DIG        exacte  | 11/16 | 14,  7/14
+23 RZ      RN         inv     |  6/16 | 14,  6/14
+23 RZ      RN         carres  |  6/16 | 14,  6/14
+23 RZ      RN         exacte  |  7/16 | 14,  6/14
+23 RZ      RZ         inv     |  7/16 | 14,  0/14
+23 RZ      RZ         carres  |  7/16 | 14,  0/14
+23 RZ      RZ         exacte  |  7/16 | 14,  0/14
+23 RZ      ECH        inv     |  7/16 | 14,  0/14
+23 RZ      ECH        carres  |  7/16 | 14,  0/14
+23 RZ      ECH        exacte  |  7/16 | 14,  0/14
+23 RZ      ECH10       inv     |  2/16 | 14,  0/14
+23 RZ      ECH10       carres  |  2/16 | 14,  0/14
+23 RZ      ECH10       exacte  |  2/16 | 14,  0/14
+23 RZ      DIG        inv     |  5/16 | 14,  0/14
+23 RZ      DIG        carres  |  5/16 | 14,  0/14
+23 RZ      DIG        exacte  |  5/16 | 14,  0/14
+24 RN      RN         inv     |  4/16 | 16, 10/14
+24 RN      RN         carres  |  4/16 | 16, 10/14
+24 RN      RN         exacte  |  4/16 | 16, 10/14
+24 RN      RZ         inv     |  8/16 | 16,  6/14
+24 RN      RZ         carres  |  8/16 | 16,  6/14
+24 RN      RZ         exacte  |  8/16 | 16,  6/14
+24 RN      ECH        inv     |  7/16 | 16,  7/14
+24 RN      ECH        carres  |  7/16 | 16,  7/14
+24 RN      ECH        exacte  |  7/16 | 16,  7/14
+24 RN      ECH10       inv     |  6/16 | 16,  5/14
+24 RN      ECH10       carres  |  6/16 | 16,  5/14
+24 RN      ECH10       exacte  |  6/16 | 16,  5/14
+24 RN      DIG        inv     |  8/16 | 16,  6/14
+24 RN      DIG        carres  |  8/16 | 16,  6/14
+24 RN      DIG        exacte  |  8/16 | 16,  6/14
+24 RNA     RN         inv     |  4/16 | 15, 10/14
+24 RNA     RN         carres  |  4/16 | 15, 10/14
+24 RNA     RN         exacte  |  4/16 | 15, 10/14
+24 RNA     RZ         inv     |  6/16 | 15,  6/14
+24 RNA     RZ         carres  |  6/16 | 15,  6/14
+24 RNA     RZ         exacte  |  6/16 | 15,  6/14
+24 RNA     ECH        inv     |  6/16 | 15,  8/14
+24 RNA     ECH        carres  |  6/16 | 15,  8/14
+24 RNA     ECH        exacte  |  6/16 | 15,  8/14
+24 RNA     ECH10       inv     |  4/16 | 15,  9/14
+24 RNA     ECH10       carres  |  4/16 | 15,  9/14
+24 RNA     ECH10       exacte  |  4/16 | 15,  9/14
+24 RNA     DIG        inv     |  6/16 | 15,  6/14
+24 RNA     DIG        carres  |  6/16 | 15,  6/14
+24 RNA     DIG        exacte  |  6/16 | 15,  6/14
+24 RZ      RN         inv     |  8/16 | 15,  9/14
+24 RZ      RN         carres  |  8/16 | 15,  9/14
+24 RZ      RN         exacte  |  9/16 | 15,  9/14
+24 RZ      RZ         inv     |  9/16 | 15,  2/14
+24 RZ      RZ         carres  |  9/16 | 15,  2/14
+24 RZ      RZ         exacte  |  9/16 | 15,  2/14
+24 RZ      ECH        inv     |  9/16 | 15,  2/14
+24 RZ      ECH        carres  |  9/16 | 15,  2/14
+24 RZ      ECH        exacte  |  9/16 | 15,  2/14
+24 RZ      ECH10       inv     |  4/16 | 15,  0/14
+24 RZ      ECH10       carres  |  4/16 | 15,  0/14
+24 RZ      ECH10       exacte  |  4/16 | 15,  0/14
+24 RZ      DIG        inv     |  6/16 | 15,  2/14
+24 RZ      DIG        carres  |  7/16 | 15,  2/14
+24 RZ      DIG        exacte  |  6/16 | 15,  2/14
+25 RN      RN         inv     |  6/16 | 16,  9/14
+25 RN      RN         carres  |  5/16 | 16,  9/14
+25 RN      RN         exacte  |  5/16 | 16,  9/14
+25 RN      RZ         inv     |  7/16 | 16,  5/14
+25 RN      RZ         carres  |  7/16 | 16,  5/14
+25 RN      RZ         exacte  |  7/16 | 16,  5/14
+25 RN      ECH        inv     |  7/16 | 16,  5/14
+25 RN      ECH        carres  |  7/16 | 16,  5/14
+25 RN      ECH        exacte  |  7/16 | 16,  5/14
+25 RN      ECH10       inv     |  6/16 | 16,  5/14
+25 RN      ECH10       carres  |  6/16 | 16,  5/14
+25 RN      ECH10       exacte  |  6/16 | 16,  5/14
+25 RN      DIG        inv     |  7/16 | 16,  5/14
+25 RN      DIG        carres  |  7/16 | 16,  5/14
+25 RN      DIG        exacte  |  7/16 | 16,  5/14
+25 RNA     RN         inv     |  5/16 | 16, 10/14
+25 RNA     RN         carres  |  4/16 | 16, 10/14
+25 RNA     RN         exacte  |  4/16 | 16, 10/14
+25 RNA     RZ         inv     |  7/16 | 16,  5/14
+25 RNA     RZ         carres  |  7/16 | 16,  5/14
+25 RNA     RZ         exacte  |  7/16 | 16,  5/14
+25 RNA     ECH        inv     |  7/16 | 16,  5/14
+25 RNA     ECH        carres  |  7/16 | 16,  5/14
+25 RNA     ECH        exacte  |  7/16 | 16,  5/14
+25 RNA     ECH10       inv     |  6/16 | 16,  5/14
+25 RNA     ECH10       carres  |  5/16 | 16,  5/14
+25 RNA     ECH10       exacte  |  5/16 | 16,  5/14
+25 RNA     DIG        inv     |  7/16 | 16,  5/14
+25 RNA     DIG        carres  |  7/16 | 16,  5/14
+25 RNA     DIG        exacte  |  7/16 | 16,  5/14
+25 RZ      RN         inv     |  6/16 | 16,  9/14
+25 RZ      RN         carres  |  6/16 | 16,  9/14
+25 RZ      RN         exacte  |  6/16 | 16,  9/14
+25 RZ      RZ         inv     |  9/16 | 16,  2/14
+25 RZ      RZ         carres  |  9/16 | 16,  2/14
+25 RZ      RZ         exacte  |  9/16 | 16,  2/14
+25 RZ      ECH        inv     |  9/16 | 16,  2/14
+25 RZ      ECH        carres  |  9/16 | 16,  2/14
+25 RZ      ECH        exacte  |  9/16 | 16,  2/14
+25 RZ      ECH10       inv     |  8/16 | 16,  0/14
+25 RZ      ECH10       carres  |  8/16 | 16,  0/14
+25 RZ      ECH10       exacte  |  8/16 | 16,  0/14
+25 RZ      DIG        inv     |  9/16 | 16,  2/14
+25 RZ      DIG        carres  |  9/16 | 16,  2/14
+25 RZ      DIG        exacte  | 10/16 | 16,  2/14
+26 RN      RN         inv     |  3/16 | 15,  9/14
+26 RN      RN         carres  |  4/16 | 15,  9/14
+26 RN      RN         exacte  |  3/16 | 15,  9/14
+26 RN      RZ         inv     |  6/16 | 15,  4/14
+26 RN      RZ         carres  |  6/16 | 15,  4/14
+26 RN      RZ         exacte  |  6/16 | 15,  4/14
+26 RN      ECH        inv     |  8/16 | 15,  4/14
+26 RN      ECH        carres  |  8/16 | 15,  4/14
+26 RN      ECH        exacte  |  8/16 | 15,  4/14
+26 RN      ECH10       inv     |  7/16 | 15,  4/14
+26 RN      ECH10       carres  |  7/16 | 15,  4/14
+26 RN      ECH10       exacte  |  7/16 | 15,  4/14
+26 RN      DIG        inv     |  6/16 | 15,  4/14
+26 RN      DIG        carres  |  6/16 | 15,  4/14
+26 RN      DIG        exacte  |  6/16 | 15,  4/14
+26 RNA     RN         inv     |  3/16 | 16,  9/14
+26 RNA     RN         carres  |  4/16 | 16,  9/14
+26 RNA     RN         exacte  |  3/16 | 16,  9/14
+26 RNA     RZ         inv     |  6/16 | 16,  4/14
+26 RNA     RZ         carres  |  6/16 | 16,  4/14
+26 RNA     RZ         exacte  |  6/16 | 16,  4/14
+26 RNA     ECH        inv     |  8/16 | 16,  5/14
+26 RNA     ECH        carres  |  8/16 | 16,  5/14
+26 RNA     ECH        exacte  |  8/16 | 16,  5/14
+26 RNA     ECH10       inv     |  7/16 | 16,  5/14
+26 RNA     ECH10       carres  |  7/16 | 16,  5/14
+26 RNA     ECH10       exacte  |  7/16 | 16,  5/14
+26 RNA     DIG        inv     |  6/16 | 16,  4/14
+26 RNA     DIG        carres  |  6/16 | 16,  4/14
+26 RNA     DIG        exacte  |  6/16 | 16,  4/14
+26 RZ      RN         inv     |  5/16 | 16,  9/14
+26 RZ      RN         carres  |  5/16 | 16,  9/14
+26 RZ      RN         exacte  |  5/16 | 16,  9/14
+26 RZ      RZ         inv     |  9/16 | 16,  4/14
+26 RZ      RZ         carres  |  9/16 | 16,  4/14
+26 RZ      RZ         exacte  |  9/16 | 16,  4/14
+26 RZ      ECH        inv     |  9/16 | 16,  4/14
+26 RZ      ECH        carres  |  9/16 | 16,  4/14
+26 RZ      ECH        exacte  |  9/16 | 16,  4/14
+26 RZ      ECH10       inv     |  8/16 | 16,  2/14
+26 RZ      ECH10       carres  |  8/16 | 16,  2/14
+26 RZ      ECH10       exacte  |  9/16 | 16,  2/14
+26 RZ      DIG        inv     |  9/16 | 16,  4/14
+26 RZ      DIG        carres  |  9/16 | 16,  4/14
+26 RZ      DIG        exacte  | 10/16 | 16,  4/14
+
+Modele retenu (IMP-0280) : 23 bits, demie en s'eloignant de zero, U arrondi a 7 chiffres
+  PG16 82/10               8.200001       8.200001       ok
+  PG24 122/12              10.16667       10.16666       ECART
+  PG27 110/13              8.461538       8.461538       ok
+  PG4 A*B^2                2.2012E+09     2.201199E+09   ECART
+  PG4 A/B                  -2.434333      -2.434332      ECART
+  PG7 B*H/2                993.9886       993.9886       ok
+  Horner 7.152624          7.152624       7.152624       ok
+  PG58 73.10001            73.10001       73.10001       ok
+  A-B+(C*D)^2              32.47562       32.47562       ok
+  A-B+C*D^2                30.14375       30.14374       ECART
+  3*B-(C*D)^2/XA^3         -66.7083       -66.7083       ok
+  XA/(YB*D)                0.96           0.96           ok
+  XA/YB/D                  0.96           0.96           ok
+  Z                        4.608899       4.608899       ok
+  PSI*R1*(XA+2)/(A+B)^4    -9.701532E-05  -9.701532E-05  ok
+  ALPHA^2+3*B-C^(-10)      -66.28627      -66.28627      ok
+  NBOR : 14 operations
+  3.645751   3.645752   ECART
+  2.909385   2.909385   ok
+  2.705692   2.705692   ok
+  2.644899   2.644899   ok
+  2.626315   2.626315   ok
+  2.620591   2.620591   ok
+  2.618824   2.618824   ok
+  2.618278   2.618278   ok
+  2.61811    2.61811    ok
+  2.618058   2.618058   ok
+  2.618042   2.618042   ok
+  2.618036   2.618036   ok
+  2.618035   2.618035   ok
+  2.618034   2.618034   ok

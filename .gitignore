@@ -1,0 +1,59 @@
+# Fichiers système
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+
+# Doublons créés par iCloud Drive (« fichier 2 », « fichier 2.a »)
+* 2
+* 2.*
+
+# Produits de construction (build/README.md) : tout sauf le Makefile et le README
+/build/*
+!/build/Makefile
+!/build/README.md
+!/build/.gitkeep
+*.o
+*.a
+*.root
+*.sym
+*.2mg
+*.po
+*.dsk
+
+# Éditeur et réglages locaux de Claude Code
+.vscode/
+*.swp
+.claude/settings.local.json
+
+# Fichiers temporaires hôte (outils de test uniquement)
+/tmp/
+*.log
+# Journaux de référence de l'audit, conservés
+!05-IMPLEMENTATION/audits/**/*.log
+
+# Outils téléchargés par scripts/creer_image.sh
+03-APPLE-IIGS/outils/*.jar
+
+# ---------------------------------------------------------------------------
+# Corpus privé : documents de tiers protégés (voir SOURCES.md).
+# Ils restent à leur place dans l'arbre de travail et sont suivis par le dépôt
+# privé superposé (.corpus.git, commande scripts/corpus.sh).
+# Toute addition ici doit être faite aussi dans le dépôt privé, et inversement.
+# ---------------------------------------------------------------------------
+/.corpus.git/
+/02-HISTORIQUE/LSE-Manuel-d-utilisation-INRDP-1975.md
+/02-HISTORIQUE/LSE15-Manuel-Mitra15-EAT-1978.md
+/02-HISTORIQUE/La-saga-du-LSE-Noyelle.md
+/02-HISTORIQUE/LAFOND83.pdf
+/02-HISTORIQUE/MEMENTO82.pdf
+/02-HISTORIQUE/MEMENTO82-transcription.md
+/02-HISTORIQUE/images/
+/02-HISTORIQUE/Programmes LSE T-1600 Victor Duruy 1978-1983/
+/03-APPLE-IIGS/manuels/*.pdf
+/03-APPLE-IIGS/systeme/*.pdf
+/03-APPLE-IIGS/outils/add-file.sh
+/03-APPLE-IIGS/outils/get-binaries.sh
+/04-ORCA-C/manuel/*.docx
+/04-ORCA-C/manuel/*.txt
+/04-ORCA-C/notes/cc.notes.txt

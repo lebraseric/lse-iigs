@@ -1,0 +1,37 @@
+"""Témoins d'INRDP75 (T1600, 1974) : + - * / et puissances entières seulement."""
+def temoins(M):
+    c = M.c
+    A, B, C, Dd, XA, YB = c('5'), c('-22.3'), c('1.82'), c('1.25'), c('-3'), c('-2.5')
+    R1, K, PSI, ALPHA = c('8.3'), c('2'), c('1.047'), c('78.5E-2')
+    t = []
+    s = c('0')
+    for n in [1,2,3,4,5,6,7,14,20,20]: s = M.add(s, c(str(n)))
+    t.append(('PG16 82/10', M.div(s, c('10')), '8.200001'))
+    s = c('0')
+    for n in [13,5,6,15,8,2,18,3,14,16,13,9]: s = M.add(s, c(str(n)))
+    t.append(('PG24 122/12', M.div(s, M.sub(c('13'), c('1'))), '10.16666'))
+    s = c('0')
+    for n in [6,4,9,5,11,13,3,8,15,9,7,10,10]: s = M.add(s, c(str(n)))
+    t.append(('PG27 110/13', M.div(s, M.sub(c('14'), c('1'))), '8.461538'))
+    a, b = c('2354'), c('-967')
+    t.append(('PG4 A*B^2', M.mul(a, M.puiss(b, 2)), '2.201199E+09'))
+    t.append(('PG4 A/B', M.div(a, b), '-2.434332'))
+    t.append(('PG7 B*H/2', M.div(M.mul(c('86.4'), c('23.009')), c('2')), '993.9886'))
+    x = c('-0.97'); p = c('0')
+    for k in ['3','4','-2','0.7','9','1','3']: p = M.add(M.mul(p, x), c(k))
+    t.append(('Horner 7.152624', p, '7.152624'))
+    a = [c('3.5'), c('5'), c('2.5'), c('6.2')]; x = c('2')
+    v = a[3]
+    for k in [2, 1, 0]: v = M.add(M.mul(x, v), a[k])
+    t.append(('PG58 73.10001', v, '73.10001'))
+    cd = M.mul(C, Dd)
+    t.append(('A-B+(C*D)^2', M.add(M.sub(A, B), M.puiss(cd, 2)), '32.47562'))
+    t.append(('A-B+C*D^2', M.add(M.sub(A, B), M.mul(C, M.puiss(Dd, 2))), '30.14374'))
+    t.append(('3*B-(C*D)^2/XA^3', M.sub(M.mul(c('3'), B), M.div(M.puiss(cd, 2), M.puiss(XA, 3))), '-66.7083'))
+    t.append(('XA/(YB*D)', M.div(XA, M.mul(YB, Dd)), '0.96'))
+    t.append(('XA/YB/D', M.div(M.div(XA, YB), Dd), '0.96'))
+    z = M.div(M.sub(M.puiss(B, 2), M.mul(M.mul(c('4'), A), C)), M.mul(c('4'), M.puiss(A, 2)))
+    t.append(('Z', z, '4.608899'))
+    t.append(('PSI*R1*(XA+2)/(A+B)^4', M.div(M.mul(M.mul(PSI, R1), M.add(XA, c('2'))), M.puiss(M.add(A, B), 4)), '-9.701532E-05'))
+    t.append(('ALPHA^2+3*B-C^(-10)', M.sub(M.add(M.puiss(ALPHA, 2), M.mul(c('3'), B)), M.puiss(C, -10)), '-66.28627'))
+    return [(nom, M.u(v), att) for nom, v, att in t]

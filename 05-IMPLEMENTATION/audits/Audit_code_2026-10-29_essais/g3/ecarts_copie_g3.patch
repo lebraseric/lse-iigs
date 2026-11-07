@@ -1,0 +1,17 @@
+--- build/Makefile	2026-10-29 11:56:52.794054155 +0100
++++ copie/build/Makefile	2026-10-29 14:30:31.983685152 +0100
+@@ -321,3 +321,14 @@
+ clean:
+ 	rm -f *.root *.a *.sym $(PROGRAMME) $(IMAGE)
+ 	rm -rf $(TESTS_BIN)
++
++# --- essai de l'audit du groupe 3 (copie de travail seulement) ---
++$(TESTS_BIN)/audit_g3: $(TST)/composants/audit_g3.c $(TST)/commun/verif.h $(INTERFACES) moniteur.a analyseur.a compilateur.a programme.a interprete.a bibliotheque.a fichiers.a codage.a ruban.a taches.a fichiers_iigs.a contexte_exec.a pile.a donnees.a decompilateur.a rcim.a symboles.a erreurs.a objets.a memoire_iigs.a $(TESTS_BIN)/console_bouchon.a $(TESTS_BIN)/horloge_bouchon.a
++	mkdir -p $(TESTS_BIN)
++	cd $(TST)/composants && $(IIX) compile $(CFLAGS) $(PROFILFLAG) audit_g3.c keep=../../build/$(TESTS_BIN)/audit_g3
++	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/audit_g3 moniteur analyseur compilateur programme interprete bibliotheque fichiers codage ruban taches fichiers_iigs contexte_exec pile donnees decompilateur $(TESTS_BIN)/console_bouchon $(TESTS_BIN)/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=$(TESTS_BIN)/audit_g3
++
++$(TESTS_BIN)/audit_g3_pile: $(TST)/composants/audit_g3_pile.c $(INTERFACES) moniteur.a analyseur.a compilateur.a programme.a interprete.a bibliotheque.a fichiers.a codage.a ruban.a taches.a fichiers_iigs.a contexte_exec.a pile.a donnees.a decompilateur.a rcim.a symboles.a erreurs.a objets.a memoire_iigs.a $(TESTS_BIN)/console_bouchon.a $(TESTS_BIN)/horloge_bouchon.a
++	mkdir -p $(TESTS_BIN)
++	cd $(TST)/composants && $(IIX) compile $(CFLAGS) $(PROFILFLAG) audit_g3_pile.c keep=../../build/$(TESTS_BIN)/audit_g3_pile
++	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/audit_g3_pile moniteur analyseur compilateur programme interprete bibliotheque fichiers codage ruban taches fichiers_iigs contexte_exec pile donnees decompilateur $(TESTS_BIN)/console_bouchon $(TESTS_BIN)/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=$(TESTS_BIN)/audit_g3_pile

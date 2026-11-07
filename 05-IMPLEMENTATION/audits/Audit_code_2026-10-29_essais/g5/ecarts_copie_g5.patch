@@ -1,0 +1,27 @@
+--- build/Makefile	2026-10-29 11:56:52.794054155 +0100
++++ copie/build/Makefile	2026-10-29 14:39:40.159118793 +0100
+@@ -321,3 +321,24 @@
+ clean:
+ 	rm -f *.root *.a *.sym $(PROGRAMME) $(IMAGE)
+ 	rm -rf $(TESTS_BIN)
++
++# --- essais de l'audit du groupe 5 (pile du 65816) ---
++$(TESTS_BIN)/essai_pile: $(TST)/audit/essai_pile.c $(INTERFACES) moniteur.a analyseur.a compilateur.a programme.a interprete.a bibliotheque.a fichiers.a codage.a ruban.a taches.a fichiers_iigs.a contexte_exec.a pile.a donnees.a decompilateur.a rcim.a symboles.a erreurs.a objets.a memoire_iigs.a $(TESTS_BIN)/console_bouchon.a $(TESTS_BIN)/horloge_bouchon.a
++	mkdir -p $(TESTS_BIN)
++	cd $(TST)/audit && $(IIX) compile $(CFLAGS) $(PROFILFLAG) essai_pile.c keep=../../build/$(TESTS_BIN)/essai_pile
++	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/essai_pile moniteur analyseur compilateur programme interprete bibliotheque fichiers codage ruban taches fichiers_iigs contexte_exec pile donnees decompilateur $(TESTS_BIN)/console_bouchon $(TESTS_BIN)/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=$(TESTS_BIN)/essai_pile
++
++$(TESTS_BIN)/essai_debordement: $(TST)/audit/essai_debordement.c $(INTERFACES)
++	mkdir -p $(TESTS_BIN)
++	cd $(TST)/audit && $(IIX) compile $(CFLAGS) $(PROFILFLAG) essai_debordement.c keep=../../build/$(TESTS_BIN)/essai_debordement
++	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/essai_debordement keep=$(TESTS_BIN)/essai_debordement
++
++$(TESTS_BIN)/essai_pile4k $(TESTS_BIN)/essai_pile16k: $(TESTS_BIN)/%: $(TST)/audit/%.c $(TST)/audit/essai_pile.c $(INTERFACES) moniteur.a analyseur.a compilateur.a programme.a interprete.a bibliotheque.a fichiers.a codage.a ruban.a taches.a fichiers_iigs.a contexte_exec.a pile.a donnees.a decompilateur.a rcim.a symboles.a erreurs.a objets.a memoire_iigs.a $(TESTS_BIN)/console_bouchon.a $(TESTS_BIN)/horloge_bouchon.a
++	mkdir -p $(TESTS_BIN)
++	cd $(TST)/audit && $(IIX) compile $(CFLAGS) $(PROFILFLAG) $*.c keep=../../build/$(TESTS_BIN)/$*
++	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/$* moniteur analyseur compilateur programme interprete bibliotheque fichiers codage ruban taches fichiers_iigs contexte_exec pile donnees decompilateur $(TESTS_BIN)/console_bouchon $(TESTS_BIN)/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=$(TESTS_BIN)/$*
++
++$(TESTS_BIN)/essai_atexit: $(TST)/audit/essai_atexit.c $(INTERFACES)
++	mkdir -p $(TESTS_BIN)
++	cd $(TST)/audit && $(IIX) compile $(CFLAGS) $(PROFILFLAG) essai_atexit.c keep=../../build/$(TESTS_BIN)/essai_atexit
++	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/essai_atexit keep=$(TESTS_BIN)/essai_atexit

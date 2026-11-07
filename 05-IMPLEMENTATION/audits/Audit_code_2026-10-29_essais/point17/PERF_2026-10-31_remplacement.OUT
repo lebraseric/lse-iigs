@@ -1,0 +1,39 @@
+Sonde PERF sur l'Apple IIGS d'Éric, 2026-10-31 (0 h 30), lancée depuis le disque dur (BIBPERF à côté de PERF, préfixe 9), sortie écrite sur la disquette /LSE/.
+Image de 0 h 28 : mesures (h), remplacement de même taille qui agrandit le fichier, et (i), le même sans l'agrandir.
+Extrait de build/LSE.po par AppleCommander (-e), CR convertis en LF.
+
+SONDE PERFORMANCE (ms par operation)
+  objets_resoudre + objets_relacher           0.500 ms
+  objets_copier (une ligne)                   0.133 ms
+  programme_chercher                          0.100 ms
+  programme_suivante                          0.100 ms
+  pile_empiler_nombre + pile_consommer        0.367 ms
+  contexte_lire_nombre                        0.067 ms
+  contexte_affecter_nombre                    0.333 ms
+  contexte_resoudre                           0.133 ms
+  conversion int -> float                     0.433 ms
+  comparaison float                           0.600 ms
+  donnees_comparer_nombres                    0.100 ms
+  donnees_operation_entiere (5+7)             0.567 ms
+  donnees_nombre_entier (200)                 0.167 ms
+  donnees_opposer                             0.033 ms
+  pile_empiler_nombre_exact + consommer       0.167 ms
+  decalage long variable (20)                 0.067 ms
+  decalage long constant (3)                  0.033 ms
+  calcul en double (1.5/3), avant AP-04       2.967 ms
+  donnees_operation_etendue (1.5/3)           1.167 ms
+  calcul en double (0.1+0.2), avant AP-04     2.400 ms
+  donnees_operation_etendue (0.1+0.2)         1.033 ms
+  (a) FAIRE 10 vide, par tour                 2.250 ms
+  (b) FAIRE 20, X_1, par tour                 4.417 ms
+  (d) FAIRE 20, X_I+1, par tour               5.833 ms
+  (e) FAIRE 20, X_I/3, par tour               7.083 ms
+  (f0) TABLEAU T[20000] seul                 16.667 ms
+  (f) TABLEAU T[20000] et GARER (80 Ko)    1350.000 ms
+  PERFT : 324 secteurs
+  (g) CHARGER (80 Ko)                       833.333 ms
+  (h) TABLEAU et GARER, remplacement       1166.667 ms
+  PERFT : 647 secteurs
+  (i) TABLEAU et GARER, sans agrandir      1100.000 ms
+  PERFT : 647 secteurs
+FIN SONDE

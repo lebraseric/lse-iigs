@@ -1,0 +1,55 @@
+Essais d'AC-29 sous Golden Gate, 2026-10-30 (ORCA/C 2.2.1)
+Construction : iix compile -P -I essai_ac29.c keep=essai_ac29 ;
+               iix -DKeepType=EXE link -P essai_ac29 keep=essai_ac29
+Répertoire de travail : ESSAI29/ créé à côté de la sonde.
+
+1. iix essai_ac29   (avant : appel de chmod() d'ORCA/C, remplacé par SetFileInfoGS)
+ENOENT 4 EIO 5 EACCES 9 ENOSPC 11 EEXIST 10
+fopen(ESSAI29:ABSENT, rb) : NULL, errno 4
+  GetFileInfo ESSAI29:ABSENT : toolerror $0046
+fopen(ESSAI29:ABSENT, r+b) : NULL, errno 4
+  GetFileInfo ESSAI29:ABSENT : toolerror $0046
+fopen(NOREP29:ABSENT, r+b) : NULL, errno 4
+  GetFileInfo NOREP29:ABSENT : toolerror $0044
+fopen(NOREP29:ABSENT, w+b) : NULL, errno 5
+  GetFileInfo NOREP29:ABSENT : toolerror $0044
+Unsupported GS/OS call: 200b        <- chmod() d'ORCA/C appelle ClearBackupBit
+
+   Après remplacement par SetFileInfoGS (accès $01) : SetFileInfo rend $0000 mais
+   GetFileInfo relit l'accès $00C3 : Golden Gate ignore les bits d'accès posés.
+   fopen r+b et w+b réussissent ; w+b vide le fichier (6 -> 0 octet), ce qui est
+   le comportement attendu pour un fichier non verrouillé.
+
+2. Fichier verrouillé depuis l'hôte : printf 'ABCDEF' > ESSAI29/HOTE ; chmod a-w ESSAI29/HOTE
+   iix essai_ac29 H
+  GetFileInfo ESSAI29:HOTE : toolerror $0000, access $0001
+fopen(ESSAI29:HOTE, r+b) : NULL, errno 4, toolerror $0000
+  contenu : 6 octet(s)
+fopen(ESSAI29:HOTE, w+b) : NULL, errno 10, toolerror $0000
+  contenu : 6 octet(s)
+   Trace GS/OS (iix --trace-gsos) : r+b = OpenGS ; w+b = OpenGS puis CreateGS.
+
+3. Répertoire non vide pris pour un fichier : mkdir ESSAI29/REP ; touch ESSAI29/REP/X
+   iix essai_ac29 D
+fopen(ESSAI29:REP, rb) : ouvert, errno 0, toolerror $0000
+fopen(ESSAI29:REP, r+b) : NULL, errno 4, toolerror $0000
+  GetFileInfo ESSAI29:REP : toolerror $0000
+remove(ESSAI29:REP) non vide : 39, errno 0
+  GetFileInfo ESSAI29:REP : toolerror $0000
+remove(ESSAI29:ABSENT) : 70, errno 0
+  GetFileInfo ESSAI29:ABSENT : toolerror $0046
+
+4. Volume plein : hdiutil create -size 1m -fs HFS+ -volname PETIT29 petit29.dmg ;
+   hdiutil attach -nobrowse petit29.dmg
+   iix essai_ac29 :Volumes:PETIT29
+fwrite : 0 sur 4096, errno 5, toolerror $0000, ferror 256, total 864256
+   iix essai_ac29w :Volumes:PETIT29:PLEIN     (WriteGS appelé directement)
+Create $0000
+Open $0000
+Write $0048, transfert 4096, total 868352
+   hdiutil detach /Volumes/PETIT29
+
+Conclusions : errno ne distingue ni un fichier verrouillé d'un fichier absent
+(ENOENT), ni un volume plein d'une autre erreur d'écriture (EIO) ; toolerror()
+n'est pas renseignée par la stdio ; GetFileInfoGS donne la cause d'un échec
+d'ouverture ou de suppression ; w+b ne vide pas un fichier verrouillé.

@@ -1,0 +1,8 @@
+Suite composants_nombres (programme NOMBRES) sur l'Apple IIGS d'Éric, 2026-10-30, image construite à 21 h 59.
+Commande : NOMBRES >NOMBRES.OUT ; extrait de build/LSE.po par AppleCommander (-e), CR convertis en LF.
+Les deux échecs viennent de l'essai, non du code : voir audit, AP-04.
+
+SUITE composants/nombres
+  ECHEC composants_nombres.c:241 : donnees_operation_etendue('+', &x, &y, &r) = 0, attendu 110
+  ECHEC composants_nombres.c:246 : donnees_operation_etendue('-', &x, &y, &r) = 0, attendu 110
+SUITE composants/nombres : 20 controle(s), 2 echec(s)

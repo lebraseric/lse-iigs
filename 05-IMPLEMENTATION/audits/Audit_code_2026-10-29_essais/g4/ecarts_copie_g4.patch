@@ -1,0 +1,142 @@
+diff -ru src/plateforme/fichiers_iigs.c copie/src/plateforme/fichiers_iigs.c
+--- src/plateforme/fichiers_iigs.c	2026-10-27 20:18:50.019098063 +0100
++++ copie/src/plateforme/fichiers_iigs.c	2026-10-29 14:18:59.405948177 +0100
+@@ -29,6 +29,10 @@
+                                                 "PROGRAMMES", "DONNEES", "", "" };
+ static GSString255 chemin_gs;
+ 
++/* ESSAI G4 : compteurs d'appels (copie d'audit seulement). */
++unsigned long essai_f_ouvrir = 0, essai_f_lire = 0, essai_f_ecrire = 0, essai_f_taille = 0,
++              essai_f_fermer = 0, essai_f_lister = 0, essai_f_supprimer = 0, essai_f_octets_lus = 0;
++
+ /* Chemin de l'espace e (nom NULL) ou d'un fichier de cet espace. */
+ static void composer(char *sortie, EspaceFichier e, const char *nom)
+ {
+@@ -107,6 +111,7 @@
+         composer(c, e, NULL);
+         creer_repertoire(c);
+     }
++    essai_f_ouvrir++;
+     composer(c, e, nom);
+     x = fopen(c, m == FICHIER_LECTURE ? "rb" : m == FICHIER_MISE_A_JOUR ? "r+b" : "w+b");
+     *f = (FichierPlateforme) x;
+@@ -116,6 +121,8 @@
+ 
+ int plateforme_fichier_lire(FichierPlateforme f, unsigned long position, void *dest, unsigned int n)
+ {
++    essai_f_lire++;
++    essai_f_octets_lus += n;
+     if (fseek((FILE *) f, (long) position, SEEK_SET) != 0) return PLAT_ERREUR;
+     if (n > 0 && fread(dest, 1, n, (FILE *) f) != n) return PLAT_ERREUR;
+     return PLAT_OK;
+@@ -124,6 +131,7 @@
+ int plateforme_fichier_ecrire(FichierPlateforme f, unsigned long position, const void *src,
+                               unsigned int n)
+ {
++    essai_f_ecrire++;
+     if (fseek((FILE *) f, (long) position, SEEK_SET) != 0) return PLAT_ERREUR;
+     if (n > 0 && fwrite(src, 1, n, (FILE *) f) != n) return PLAT_PLEIN;
+     if (fflush((FILE *) f) != 0) return PLAT_PLEIN;
+@@ -132,12 +140,14 @@
+ 
+ unsigned long plateforme_fichier_taille(FichierPlateforme f)
+ {
++    essai_f_taille++;
+     if (fseek((FILE *) f, 0L, SEEK_END) != 0) return 0;
+     return (unsigned long) ftell((FILE *) f);
+ }
+ 
+ void plateforme_fichier_fermer(FichierPlateforme f)
+ {
++    essai_f_fermer++;
+     if (f != NULL) fclose((FILE *) f);
+ }
+ 
+@@ -152,6 +162,7 @@
+ int plateforme_fichier_supprimer(EspaceFichier e, const char *nom)
+ {
+     char c[LONGUEUR_CHEMIN];
++    essai_f_supprimer++;
+     composer(c, e, nom);
+     return remove(c) == 0 ? PLAT_OK : PLAT_INEXISTANT;
+ }
+@@ -176,6 +187,7 @@
+     unsigned int n;
+     int trouve;
+ 
++    essai_f_lister++;
+     composer(c, e, NULL);
+     op.pCount = 3;
+     op.pathname = gs(c);
+diff -ru src/plateforme/memoire_iigs.c copie/src/plateforme/memoire_iigs.c
+--- src/plateforme/memoire_iigs.c	2026-10-29 11:37:00.105431058 +0100
++++ copie/src/plateforme/memoire_iigs.c	2026-10-29 14:18:59.405549846 +0100
+@@ -18,6 +18,12 @@
+ 
+ segment "objets";
+ 
++/* ESSAI G4 : compteurs d'appels (copie d'audit seulement). */
++unsigned long essai_nb_alloc = 0;
++unsigned long essai_nb_liberer = 0;
++unsigned long essai_nb_verrou = 0;
++unsigned long essai_nb_deverrou = 0;
++
+ /* Un bloc de 64 Kio au plus est alloué sans franchir de frontière de banque
+    (attrNoCross) : un objet reste ainsi dans une seule banque du 65816. Au-delà
+    (objets hors-norme de très grande taille), ce n'est pas possible. */
+@@ -29,6 +35,7 @@
+     Handle h;
+     Word attributs;
+ 
++    essai_nb_alloc++;
+     attributs = attrNoPurge | attrNoSpec;
+     if (taille_octets <= TAILLE_MAX_SANS_FRANCHISSEMENT)
+         attributs |= attrNoCross;
+@@ -40,17 +47,20 @@
+ 
+ void plateforme_bloc_liberer(HandlePlateforme h)
+ {
++    essai_nb_liberer++;
+     DisposeHandle((Handle) h);
+ }
+ 
+ unsigned char *plateforme_bloc_verrouiller(HandlePlateforme h)
+ {
++    essai_nb_verrou++;
+     HLock((Handle) h);
+     return *(unsigned char **) h;
+ }
+ 
+ void plateforme_bloc_deverrouiller(HandlePlateforme h)
+ {
++    essai_nb_deverrou++;
+     HUnlock((Handle) h);
+ }
+ 
+--- build/Makefile	2026-10-29 11:56:52.794054155 +0100
++++ copie/build/Makefile	2026-10-29 14:35:22.321336938 +0100
+@@ -321,3 +321,24 @@
+ clean:
+ 	rm -f *.root *.a *.sym $(PROGRAMME) $(IMAGE)
+ 	rm -rf $(TESTS_BIN)
++
++# --- essais de l'audit du groupe 4 (copie d'audit seulement) ---
++$(TESTS_BIN)/essai_g4: $(TST)/composants/essai_g4.c $(TST)/composants/compilateur_outils.h $(TST)/commun/verif.h $(INTERFACES) codage.a compilateur.a programme.a interprete.a bibliotheque.a fichiers.a fichiers_iigs.a contexte_exec.a pile.a donnees.a decompilateur.a rcim.a symboles.a erreurs.a objets.a memoire_iigs.a $(TESTS_BIN)/console_bouchon.a $(TESTS_BIN)/horloge_bouchon.a
++	mkdir -p $(TESTS_BIN)
++	cd $(TST)/composants && $(IIX) compile $(CFLAGS) $(PROFILFLAG) essai_g4.c keep=../../build/$(TESTS_BIN)/essai_g4
++	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/essai_g4 codage compilateur programme interprete bibliotheque fichiers fichiers_iigs contexte_exec pile donnees decompilateur $(TESTS_BIN)/console_bouchon $(TESTS_BIN)/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=$(TESTS_BIN)/essai_g4
++
++$(TESTS_BIN)/essai_g4b: $(TST)/composants/essai_g4b.c $(TST)/composants/compilateur_outils.h $(TST)/commun/verif.h $(INTERFACES) compilateur.a programme.a interprete.a bibliotheque.a fichiers.a fichiers_iigs.a contexte_exec.a pile.a donnees.a decompilateur.a rcim.a symboles.a erreurs.a objets.a memoire_iigs.a $(TESTS_BIN)/console_bouchon.a $(TESTS_BIN)/horloge_bouchon.a
++	mkdir -p $(TESTS_BIN)
++	cd $(TST)/composants && $(IIX) compile $(CFLAGS) $(PROFILFLAG) essai_g4b.c keep=../../build/$(TESTS_BIN)/essai_g4b
++	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/essai_g4b compilateur programme interprete bibliotheque fichiers fichiers_iigs contexte_exec pile donnees decompilateur $(TESTS_BIN)/console_bouchon $(TESTS_BIN)/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=$(TESTS_BIN)/essai_g4b
++
++$(TESTS_BIN)/essai_g4c: $(TST)/composants/essai_g4c.c $(TST)/commun/verif.h $(INTERFACES) moniteur.a analyseur.a compilateur.a programme.a interprete.a bibliotheque.a fichiers.a codage.a ruban.a taches.a fichiers_iigs.a contexte_exec.a pile.a donnees.a decompilateur.a rcim.a symboles.a erreurs.a objets.a memoire_iigs.a $(TESTS_BIN)/console_bouchon.a $(TESTS_BIN)/horloge_bouchon.a
++	mkdir -p $(TESTS_BIN)
++	cd $(TST)/composants && $(IIX) compile $(CFLAGS) $(PROFILFLAG) essai_g4c.c keep=../../build/$(TESTS_BIN)/essai_g4c
++	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/essai_g4c moniteur analyseur compilateur programme interprete bibliotheque fichiers codage ruban taches fichiers_iigs contexte_exec pile donnees decompilateur $(TESTS_BIN)/console_bouchon $(TESTS_BIN)/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=$(TESTS_BIN)/essai_g4c
++
++$(TESTS_BIN)/essai_g4d: $(TST)/composants/essai_g4d.c $(TST)/composants/compilateur_outils.h $(TST)/commun/verif.h $(INTERFACES) compilateur.a programme.a interprete.a bibliotheque.a fichiers.a fichiers_iigs.a contexte_exec.a pile.a donnees.a decompilateur.a rcim.a symboles.a erreurs.a objets.a memoire_iigs.a $(TESTS_BIN)/console_bouchon.a $(TESTS_BIN)/horloge_bouchon.a
++	mkdir -p $(TESTS_BIN)
++	cd $(TST)/composants && $(IIX) compile $(CFLAGS) $(PROFILFLAG) essai_g4d.c keep=../../build/$(TESTS_BIN)/essai_g4d
++	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/essai_g4d compilateur programme interprete bibliotheque fichiers fichiers_iigs contexte_exec pile donnees decompilateur $(TESTS_BIN)/console_bouchon $(TESTS_BIN)/horloge_bouchon rcim symboles erreurs objets memoire_iigs keep=$(TESTS_BIN)/essai_g4d

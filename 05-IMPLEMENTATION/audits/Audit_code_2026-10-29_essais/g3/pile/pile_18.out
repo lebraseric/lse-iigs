@@ -1,0 +1,7 @@
+SCENARIO 18 ligne 4 parentheses et SI (SP main 17D8)
+BONJOUR~
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52~
+10 SI (A+(B*(C-D)))>0 ALORS X_((A+B)*(C+D)) SINON X_1~
+AU REVOIR  13:03:52~
+
+FIN 18

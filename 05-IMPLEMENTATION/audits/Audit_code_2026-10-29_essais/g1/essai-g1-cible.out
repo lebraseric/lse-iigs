@@ -1,0 +1,35 @@
+SUITE composants/audit_g1
+  [A1 boucle d'une ligne] fin 6, ligne 20, X = 300
+  ECHEC composants_audit_g1.c:98 : f == FIN_INTERRUPTION && valeur("X") < 300.0f
+  [A2 boucle de deux lignes] fin 6, ligne 20, X = -996
+  [B bureau ?Z] fin 3, EX 62 ; pile 1 -> 2
+  [B CONTINUER] fin 0, EX 0, X = -996, Z = 20, pile 1
+  ECHEC composants_audit_g1.c:126 : f == FIN_TERMINER && valeur("X") == 20.0f
+  [C1 RESULTAT T[N]] fin 3, EX 96 ligne 30, X = -996
+  ECHEC composants_audit_g1.c:139 : f == FIN_TERMINER && valeur("X") == 7.0f
+  [C2 &G(T[2]) LOCAL] fin 3, EX 96 ligne 10, Y = -996
+  ECHEC composants_audit_g1.c:144 : f == FIN_TERMINER && valeur("Y") == 8.0f
+  [G LIRE T repris] fin 7, T = 2 3 -996, Y = 9
+  ECHEC composants_audit_g1.c:175 : f == FIN_TERMINER && element_de("T", 0) == 1.0f && element_de("T", 1) == 2.0f&& element_de("T", 2) == 3.0f
+  [K1 AFFICHER imbrique] fin 0, affichage [*1 2 ]
+  ECHEC composants_audit_g1.c:189 : strcmp(bouchon_affichage, "*  1.00  2.00") == 0
+  [K2 pas a pas] fin 0 apres 3 pas, affichage [1 2 ]
+  ECHEC composants_audit_g1.c:200 : strcmp(bouchon_affichage, "  1.00  2.00") == 0
+  [H F45.0 de 3E38] [      3000000005497755-0000000000000000000000] 1 caractere(s) hors chiffres
+  [H F30.2 de 1E20] [         10000000200408772@000.00]
+  [D creation] EX 0, longueur 270338
+  [D 65535 elements] 0 faux (premier 0) ; bornes 1 65535 1
+  [E GARER/CHARGER T[16000]] fin 0, EX 0 ligne 0, A = 0, B = 0
+  ECHEC composants_audit_g1.c:269 : f == FIN_TERMINER && valeur("A") == 5.0f && valeur("B") == 7.0f
+  [I pile] 12000 elements empiles, capacite 16384, 114688 octets
+  [I pile] 2637 element(s) faux, premier rang 1 (rang * 7 = 7)
+  ECHEC composants_audit_g1.c:297 : faux == 0
+  [J1 cases, 12000 appels] fin 0, EX 0 ligne 0, K = 0, pile 0
+  ECHEC composants_audit_g1.c:311 : f == FIN_TERMINER && valeur("K") == 12001.0f
+  [J2 cases, 14000 appels] fin 3, EX 5 ligne 40, K = 1, pile 2
+  ECHEC composants_audit_g1.c:316 : f == FIN_TERMINER && valeur("K") == 14001.0f
+  [F1 profondeur 9000] fin 0, EX 0, X = 9000, capacite pile 16384
+  [F2 profondeur 15000] fin 3, EX 96, X = -996, capacite pile 16384
+  ECHEC composants_audit_g1.c:334 : f == FIN_TERMINER && valeur("X") == 15000.0f
+SUITE composants/audit_g1 : 34 controle(s), 12 echec(s)
+code 12

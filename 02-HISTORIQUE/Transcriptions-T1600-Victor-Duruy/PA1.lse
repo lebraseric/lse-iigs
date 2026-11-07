@@ -1,0 +1,11 @@
+1***************************************************************************
+2*        PETITES        ANNONCES     DU      CLUB        INFORMATIQUE
+3***************************************************************************
+4*     AUTEUR   :   ERIC LE BRAS
+5*   LYCEE VICTOR DURUY                              MARS1983
+10 AFFICHER[10/,24X,'P E T I T E S   A N N O N C E S',/,24X,31'-',4/]
+12 AFFICHER[10X,'1 - ENREGISTREMENT D''UNE ANNONCE',/]
+14 AFFICHER[10X,'2 - MODIFICATION D''UNE ANNONCE',/]
+16 AFFICHER[10X,'3 - SUPRESSION D''UNE ANNONCE',/]
+18 AFFICHER[10X,'4 - LISTE DES ANNONCES',5/]
+20 AFFICHER 'VOTRE CHOIX ----->';LIRE A

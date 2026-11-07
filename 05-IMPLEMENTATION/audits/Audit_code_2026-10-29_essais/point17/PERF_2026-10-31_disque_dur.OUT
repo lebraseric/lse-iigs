@@ -1,0 +1,34 @@
+Sonde PERF sur l'Apple IIGS d'Éric, 2026-10-31 (0 h 23), lancée depuis le disque dur de la machine (GARER et CHARGER dans BIBPERF, à côté de PERF, préfixe 9), sortie écrite sur la disquette /LSE/.
+Même programme que PERF_2026-10-31.OUT (image de 23 h 46), qui avait tourné depuis la disquette.
+Extrait de build/LSE.po par AppleCommander (-e), CR convertis en LF.
+
+SONDE PERFORMANCE (ms par operation)
+  objets_resoudre + objets_relacher           0.500 ms
+  objets_copier (une ligne)                   0.167 ms
+  programme_chercher                          0.100 ms
+  programme_suivante                          0.100 ms
+  pile_empiler_nombre + pile_consommer        0.367 ms
+  contexte_lire_nombre                        0.100 ms
+  contexte_affecter_nombre                    0.333 ms
+  contexte_resoudre                           0.133 ms
+  conversion int -> float                     0.433 ms
+  comparaison float                           0.633 ms
+  donnees_comparer_nombres                    0.100 ms
+  donnees_operation_entiere (5+7)             0.600 ms
+  donnees_nombre_entier (200)                 0.200 ms
+  donnees_opposer                             0.033 ms
+  pile_empiler_nombre_exact + consommer       0.167 ms
+  decalage long variable (20)                 0.067 ms
+  decalage long constant (3)                  0.033 ms
+  calcul en double (1.5/3), avant AP-04       3.100 ms
+  donnees_operation_etendue (1.5/3)           1.300 ms
+  calcul en double (0.1+0.2), avant AP-04     2.433 ms
+  donnees_operation_etendue (0.1+0.2)         1.000 ms
+  (a) FAIRE 10 vide, par tour                 2.333 ms
+  (b) FAIRE 20, X_1, par tour                 4.667 ms
+  (d) FAIRE 20, X_I+1, par tour               6.333 ms
+  (e) FAIRE 20, X_I/3, par tour               7.583 ms
+  (f0) TABLEAU T[20000] seul                 16.667 ms
+  (f) TABLEAU T[20000] et GARER (80 Ko)    1483.333 ms
+  (g) CHARGER (80 Ko)                       816.667 ms
+FIN SONDE

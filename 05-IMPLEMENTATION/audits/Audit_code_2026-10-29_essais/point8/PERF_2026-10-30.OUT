@@ -1,0 +1,25 @@
+Sonde PERF sur l'Apple IIGS d'Éric, 2026-10-30, après l'extension d'IMP-0243 (point 8 de l'audit).
+Commande : PERF >PERF.OUT ; extrait de build/LSE.po par AppleCommander (-e), CR convertis en LF.
+
+SONDE PERFORMANCE (ms par operation)
+  objets_resoudre + objets_relacher           0.467 ms
+  objets_copier (une ligne)                   0.133 ms
+  programme_chercher                          0.100 ms
+  programme_suivante                          0.133 ms
+  pile_empiler_nombre + pile_consommer        0.367 ms
+  contexte_lire_nombre                        0.067 ms
+  contexte_affecter_nombre                    0.300 ms
+  contexte_resoudre                           0.133 ms
+  conversion int -> float                     0.433 ms
+  comparaison float                           0.600 ms
+  donnees_comparer_nombres                    0.067 ms
+  donnees_operation_entiere (5+7)             0.567 ms
+  donnees_nombre_entier (200)                 0.200 ms
+  donnees_opposer                             0.033 ms
+  pile_empiler_nombre_exact + consommer       0.133 ms
+  decalage long variable (20)                 0.033 ms
+  decalage long constant (3)                  0.033 ms
+  (a) FAIRE 10 vide, par tour                 3.000 ms
+  (b) FAIRE 20, X_1, par tour                 7.000 ms
+  (d) FAIRE 20, X_I+1, par tour               9.000 ms
+FIN SONDE

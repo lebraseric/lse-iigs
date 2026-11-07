@@ -1,0 +1,608 @@
+SUITE audit/g3
+  sizeof EntreeObjetCompile 5, ResultatCompilation 8, DiagnosticCompilation 3, ElementPile 7, PileEvaluation 8
+  D1 temoin : [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 LIRE A,B
+
+20 AFFICHER A,B
+
+30 TERMINER
+
+EXECUTER A PARTIR DE 10
+
+1
+
+PRET EN LIGNE 010
+
+?A
+
+1 
+
+CONTINUER
+
+2
+
+
+
+1 2 
+
+TERMINE
+
+AU REVOIR  13:03:52
+
+]
+  D1 : [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 LIRE A,B
+
+20 AFFICHER A,B
+
+30 TERMINER
+
+EXECUTER A PARTIR DE 10
+
+1
+
+PRET EN LIGNE 010
+
+?A+C
+
+ERREUR (EX.) 05 EN LIGNE BUR
+
+CONTINUER
+
+2
+
+
+
+1 
+
+ERREUR (EX.) 62 EN LIGNE 020
+
+AU REVOIR  13:03:52
+
+]
+  [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 LIRE A,B
+
+20 AFFICHER A,B
+
+30 TERMINER
+
+EXECUTER A PARTIR DE 10
+
+1
+
+PRET EN LIGNE 010
+
+?A+C
+
+ERREUR (EX.) 05 EN LIGNE BUR
+
+CONTINUER
+
+2
+
+
+
+1 
+
+ERREUR (EX.) 62 EN LIGNE 020
+
+AU REVOIR  13:03:52
+
+]
+    ne contient pas [CONTINUER
+
+2
+
+
+
+1 2 
+
+TERMINE]
+  ECHEC audit_g3.c:363 : contient("CONTINUER
+
+2
+
+
+
+1 2 
+
+TERMINE")
+  D2 : [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 LIRE A,B
+
+20 AFFICHER A,B
+
+30 TERMINER
+
+EXECUTER A PARTIR DE 10
+
+1
+
+PRET EN LIGNE 010
+
+LIRE X
+
+PRET
+
+CONTINUER
+
+2
+
+
+
+1 
+
+ERREUR (EX.) 62 EN LIGNE 020
+
+AU REVOIR  13:03:52
+
+]
+  [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 LIRE A,B
+
+20 AFFICHER A,B
+
+30 TERMINER
+
+EXECUTER A PARTIR DE 10
+
+1
+
+PRET EN LIGNE 010
+
+LIRE X
+
+PRET
+
+CONTINUER
+
+2
+
+
+
+1 
+
+ERREUR (EX.) 62 EN LIGNE 020
+
+AU REVOIR  13:03:52
+
+]
+    ne contient pas [CONTINUER
+
+2
+
+
+
+1 2 
+
+TERMINE]
+  ECHEC audit_g3.c:369 : contient("CONTINUER
+
+2
+
+
+
+1 2 
+
+TERMINE")
+  D3 temoin : [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 X_&F(1)+1
+
+20 AFFICHER X
+
+30 TERMINER
+
+40 PROCEDURE &F(A) LOCAL A
+
+50 PAUSE
+
+60 RESULTAT A*10
+
+EXECUTER A PARTIR DE 10
+
+PAUSE EN LIGNE 050
+
+?A
+
+1 
+
+CONTINUER
+
+
+
+11 
+
+TERMINE
+
+AU REVOIR  13:03:52
+
+]
+  D3 : [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 X_&F(1)+1
+
+20 AFFICHER X
+
+30 TERMINER
+
+40 PROCEDURE &F(A) LOCAL A
+
+50 PAUSE
+
+60 RESULTAT A*10
+
+EXECUTER A PARTIR DE 10
+
+PAUSE EN LIGNE 050
+
+?A+C
+
+ERREUR (EX.) 05 EN LIGNE BUR
+
+CONTINUER
+
+
+
+ERREUR (EX.) 62 EN LIGNE 020
+
+AU REVOIR  13:03:52
+
+]
+  [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 X_&F(1)+1
+
+20 AFFICHER X
+
+30 TERMINER
+
+40 PROCEDURE &F(A) LOCAL A
+
+50 PAUSE
+
+60 RESULTAT A*10
+
+EXECUTER A PARTIR DE 10
+
+PAUSE EN LIGNE 050
+
+?A+C
+
+ERREUR (EX.) 05 EN LIGNE BUR
+
+CONTINUER
+
+
+
+ERREUR (EX.) 62 EN LIGNE 020
+
+AU REVOIR  13:03:52
+
+]
+    ne contient pas [CONTINUER
+
+11 
+
+TERMINE]
+  ECHEC audit_g3.c:380 : contient("CONTINUER
+
+11 
+
+TERMINE")
+  D4 : [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 X_&F(1)+1
+
+20 AFFICHER X
+
+30 TERMINER
+
+40 PROCEDURE &F(A) LOCAL A
+
+50 PAUSE
+
+60 RESULTAT A*10
+
+EXECUTER A PARTIR DE 10
+
+PAUSE EN LIGNE 050
+
+LIRE Y
+
+PRET
+
+CONTINUER
+
+
+
+ERREUR (EX.) 62 EN LIGNE 020
+
+AU REVOIR  13:03:52
+
+]
+  [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 X_&F(1)+1
+
+20 AFFICHER X
+
+30 TERMINER
+
+40 PROCEDURE &F(A) LOCAL A
+
+50 PAUSE
+
+60 RESULTAT A*10
+
+EXECUTER A PARTIR DE 10
+
+PAUSE EN LIGNE 050
+
+LIRE Y
+
+PRET
+
+CONTINUER
+
+
+
+ERREUR (EX.) 62 EN LIGNE 020
+
+AU REVOIR  13:03:52
+
+]
+    ne contient pas [CONTINUER
+
+11 
+
+TERMINE]
+  ECHEC audit_g3.c:388 : contient("CONTINUER
+
+11 
+
+TERMINE")
+  D5 : [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 LIRE A
+
+20 TERMINER
+
+EXECUTER A PARTIR DE 10
+
+1 2
+
+TERMINE
+
+LIRE X
+
+7
+
+ERREUR  C 07
+
+?X
+
+2 
+
+AU REVOIR  13:03:52
+
+]
+  D6 : [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 TABLEAU T[3]
+
+20 LIRE T
+
+30 AFFICHER T
+
+40 TERMINER
+
+EXECUTER A PARTIR DE 10
+
+1 2
+
+PRET EN LIGNE 020
+
+LIRE X9
+
+CONTINUER
+
+3
+
+4
+
+5
+
+
+
+3 
+
+4 
+
+5 
+
+TERMINE
+
+AU REVOIR  13:03:52
+
+]
+  [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+10 TABLEAU T[3]
+
+20 LIRE T
+
+30 AFFICHER T
+
+40 TERMINER
+
+EXECUTER A PARTIR DE 10
+
+1 2
+
+PRET EN LIGNE 020
+
+LIRE X9
+
+CONTINUER
+
+3
+
+4
+
+5
+
+
+
+3 
+
+4 
+
+5 
+
+TERMINE
+
+AU REVOIR  13:03:52
+
+]
+    ne contient pas [1 2 3]
+  ECHEC audit_g3.c:398 : contient("1 2 3")
+  D7 : [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+1 CHAINE C;C_'100 X_1'!EQC(0);GARER C,1,'EE'
+
+2 PAUSE
+
+3 AFFICHER 'FIN'
+
+4 TERMINER
+
+EXECUTER A PARTIR DE 1
+
+PAUSE EN LIGNE 002
+
+ENCODER EE,200
+
+CONTINUER
+
+????
+
+AU REVOIR  13:03:52
+
+]
+  [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+1 CHAINE C;C_'100 X_1'!EQC(0);GARER C,1,'EE'
+
+2 PAUSE
+
+3 AFFICHER 'FIN'
+
+4 TERMINER
+
+EXECUTER A PARTIR DE 1
+
+PAUSE EN LIGNE 002
+
+ENCODER EE,200
+
+CONTINUER
+
+????
+
+AU REVOIR  13:03:52
+
+]
+    ne contient pas [CONTINUER
+
+FIN]
+  [BONJOUR
+
+LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52
+
+1 CHAINE C;C_'100 X_1'!EQC(0);GARER C,1,'EE'
+
+2 PAUSE
+
+3 AFFICHER 'FIN'
+
+4 TERMINER
+
+EXECUTER A PARTIR DE 1
+
+PAUSE EN LIGNE 002
+
+ENCODER EE,200
+
+CONTINUER
+
+????
+
+AU REVOIR  13:03:52
+
+]
+    ne contient pas [CONTINUER
+
+
+
+FIN]
+  ECHEC audit_g3.c:403 : contient("CONTINUER
+
+FIN") || contient("CONTINUER
+
+
+
+FIN")
+  REEL 3            :  59 mul/div,  4 comparaisons,  4 autres (replique conforme)
+  REEL 37           :  83 mul/div,  5 comparaisons,  4 autres (replique conforme)
+  REEL 200          : 108 mul/div,  6 comparaisons,  4 autres (replique conforme)
+  REEL 12345        : 161 mul/div,  8 comparaisons,  4 autres (replique conforme)
+  REEL 3.14159      :  59 mul/div,  4 comparaisons,  4 autres (replique conforme)
+  REEL 0.001        : 136 mul/div,  7 comparaisons,  4 autres (replique conforme)
+  REEL 0.5          :  83 mul/div,  5 comparaisons,  4 autres (replique conforme)
+  REEL 65535        : 161 mul/div,  8 comparaisons,  4 autres (replique conforme)
+  REEL 1E+10        : 352 mul/div, 14 comparaisons,  4 autres (replique conforme)
+  REEL 1E+30        : 1052 mul/div, 34 comparaisons,  4 autres (replique conforme)
+  REEL 1E-30        : 1054 mul/div, 34 comparaisons,  4 autres (replique conforme)
+  REEL TABLE 3            :   2 mul/div,  4 comparaisons
+  REEL TABLE 37           :   3 mul/div,  5 comparaisons
+  REEL TABLE 12345        :   6 mul/div,  8 comparaisons
+  REEL TABLE 0.001        :   5 mul/div,  7 comparaisons
+  REEL TABLE 1E+10        :  12 mul/div, 14 comparaisons
+  REEL TABLE 1E+30        :  42 mul/div, 34 comparaisons
