@@ -29,9 +29,9 @@ Les numérisations des listages et exécutions imprimés par Éric Le Bras, alor
 
 | Référence | Chemin | Disponibilité |
 |---|---|---|
-| Apple Computer, *Apple IIGS Toolbox Reference*, volume 1 (chap. 12, Memory Manager) | `03-APPLE-IIGS/manuels/` | © Apple |
-| Apple Computer, *Apple IIGS Toolbox Reference*, volume 3 (chap. 36) | `03-APPLE-IIGS/manuels/` | © Apple |
-| Apple Computer, *Apple IIGS GS/OS Reference* (chap. 9, pilote `.CONSOLE`) | `03-APPLE-IIGS/systeme/` | © Apple |
+| Apple Computer, *Apple IIGS Toolbox Reference*, volume 1 (chap. 12, Memory Manager) | `appleiigs-tech-doc/toolbox-reference/` (workspace voisin, Markdown) | © Apple |
+| Apple Computer, *Apple IIGS Toolbox Reference*, volume 3 (chap. 36) | `appleiigs-tech-doc/toolbox-reference/` (workspace voisin, Markdown) | © Apple |
+| Apple Computer, *Apple IIGS GS/OS Reference* (chap. 9, pilote `.CONSOLE`) | `appleiigs-tech-doc/gsos-reference/` (workspace voisin, Markdown) | © Apple |
 
 ## ORCA/C
 
