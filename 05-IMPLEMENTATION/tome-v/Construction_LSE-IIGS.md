@@ -229,8 +229,9 @@ endif
 # composants_nombres, à passer sur cible : sous Golden Gate, le format étendu
 # de SANE n'a que 53 bits (audit du code, AP-04).
 SONDES_IMAGE := $(TESTS_BIN)/sonde_console:SONDE:EXE $(TESTS_BIN)/sonde_fichiers:SONDEF:EXE \
-                $(TESTS_BIN)/sonde_erreur:SONDEE:EXE
-SONDES_DEP   := $(TESTS_BIN)/sonde_console $(TESTS_BIN)/sonde_fichiers $(TESTS_BIN)/sonde_erreur
+                $(TESTS_BIN)/sonde_erreur:SONDEE:EXE $(TESTS_BIN)/sonde_serie:SONDES:EXE
+SONDES_DEP   := $(TESTS_BIN)/sonde_console $(TESTS_BIN)/sonde_fichiers $(TESTS_BIN)/sonde_erreur \
+                $(TESTS_BIN)/sonde_serie
 ifneq ($(PROFIL),dev)
 SONDES_IMAGE += $(TESTS_BIN)/sonde_performance:PERF:EXE $(TESTS_BIN)/composants_nombres:NOMBRES:EXE
 SONDES_DEP   += $(TESTS_BIN)/sonde_performance $(TESTS_BIN)/composants_nombres
@@ -525,7 +526,15 @@ $(TESTS_BIN)/plateforme_pile: $(TST)/plateforme/plateforme_pile.c $(DEPENDANCES)
 
 # Sonde du pilote .CONSOLE (Moniteur IMP-0240) : hors de « make tests », car
 # Golden Gate ne fournit pas le pilote ; à lancer sur cible.
-sonde: $(TESTS_BIN)/sonde_console $(TESTS_BIN)/sonde_performance $(TESTS_BIN)/sonde_fichiers
+sonde: $(TESTS_BIN)/sonde_console $(TESTS_BIN)/sonde_performance $(TESTS_BIN)/sonde_fichiers \
+       $(TESTS_BIN)/sonde_serie
+
+# Sonde du port série (terminal série, essais du 2026-11-19) : sur cible
+# seulement, Golden Gate n'ayant ni DInfo ni port série.
+$(TESTS_BIN)/sonde_serie: $(TST)/plateforme/sonde_serie.c $(DEPENDANCES)
+	mkdir -p $(TESTS_BIN)
+	cd $(TST)/plateforme && $(IIX) compile $(CFLAGS) $(PROFILFLAG) sonde_serie.c keep=../../build/$(TESTS_BIN)/sonde_serie
+	$(IIX) -DKeepType=$(KEEPTYPE) link $(LFLAGS) $(TESTS_BIN)/sonde_serie keep=$(TESTS_BIN)/sonde_serie
 
 $(TESTS_BIN)/sonde_fichiers: $(TST)/plateforme/sonde_fichiers.c $(DEPENDANCES)
 	mkdir -p $(TESTS_BIN)

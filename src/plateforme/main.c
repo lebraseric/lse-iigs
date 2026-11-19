@@ -3,11 +3,13 @@
         IMP-0276 (F4 par défaut ; -F4, -T1600, -MITRA15),
         IMP-0186 (-LIBELLES), IMP-0196 (configuration de session), IMP-0228,
         IMP-0245 (-BIB), IMP-0253 (-TEMP), IMP-0258 (-UNITE), IMP-0262 (-RUBAN), IMP-0268 (-ID),
-        IMP-0270 (blocs rendus en fin de session), IMP-0272 (pile de 16 Kio)
-   Spécification : chapitre Moniteur et console §2, §9 bis. Segment blanc. */
+        IMP-0270 (blocs rendus en fin de session), IMP-0272 (pile de 16 Kio),
+        IMP-0283 (-SERIE : console sur le port modem)
+   Spécification : chapitre Moniteur et console §2, §9 bis, §9 ter. Segment blanc. */
 
 #pragma stacksize 16384                         /* IMP-0272 */
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "../interfaces/types_communs.h"
@@ -67,12 +69,14 @@ int main(int argc, char *argv[])
     unsigned long v;
     char t[100];
     int id_choisie = 0;
+    int serie = 0;                               /* IMP-0283 */
 
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-F4") == 0) configuration_session.profil = PROFIL_T1600_F4;
         else if (strcmp(argv[i], "-T1600") == 0) configuration_session.profil = PROFIL_T1600_V4;
         else if (strcmp(argv[i], "-MITRA15") == 0) configuration_session.profil = PROFIL_MITRA15_V8;
         else if (strcmp(argv[i], "-LIBELLES") == 0) configuration_session.libelles = 1;
+        else if (strcmp(argv[i], "-SERIE") == 0) serie = 1;
         else if (strcmp(argv[i], "-BIB") != 0 && strcmp(argv[i], "-UNITE") != 0
                  && strcmp(argv[i], "-RUBAN") != 0 && strcmp(argv[i], "-ID") != 0
                  && strcmp(argv[i], "-TEMP") != 0) return option_incorrecte(argv[i], NULL);
@@ -99,7 +103,14 @@ int main(int argc, char *argv[])
         objets_terminer();                          /* IMP-0270 */
         return 1;
     }
-    console_ouvrir();
+    if (!serie) console_ouvrir();
+    else if (console_ouvrir_serie())             /* IMP-0283 : écran du IIGS */
+        fputs("LSE : SESSION SUR LE PORT SERIE\n", stdout);
+    else {
+        fputs("PORT SERIE INDISPONIBLE\n", stdout);
+        objets_terminer();                          /* IMP-0270 */
+        return 1;
+    }
     console_rubout(configuration_session.profil == PROFIL_T1600_F4);   /* IMP-0238 */
     plateforme_volume_permettre(console_pilote());     /* IMP-0257 */
     if (plateforme_bibliotheque_ouvrir(bib) != PLAT_OK) {   /* bibliothèque inaccessible (IMP-0250) */

@@ -1,6 +1,6 @@
 # LSE-IIGS — Manuel de l'utilisateur
 
-**Version 1.0 du logiciel — manuel du 6 novembre 2026**
+**Version 1.1 du logiciel — manuel du 19 novembre 2026**
 
 ---
 
@@ -20,7 +20,7 @@ Le LSE se reconnaît à quelques traits :
 
 ### LSE-IIGS
 
-LSE-IIGS fait revivre sur l'Apple IIGS un système LSE tel qu'on l'utilisait dans les lycées à la fin des années 1970 et au début des années 1980 : même langage, mêmes commandes, mêmes messages, même façon de travailler. L'écran de l'Apple IIGS joue le rôle de la console (une télétype ou un terminal de l'époque) ; un fichier texte remplace le ruban perforé ; un répertoire du disque remplace le disque du mini-ordinateur.
+LSE-IIGS fait revivre sur l'Apple IIGS un système LSE tel qu'on l'utilisait dans les lycées à la fin des années 1970 et au début des années 1980 : même langage, mêmes commandes, mêmes messages, même façon de travailler. L'écran de l'Apple IIGS joue le rôle de la console (une télétype ou un terminal de l'époque), à moins qu'un terminal relié au port série ne la tienne (paragraphe 4.10) ; un fichier texte remplace le ruban perforé ; un répertoire du disque remplace le disque du mini-ordinateur.
 
 LSE-IIGS sait se comporter comme trois systèmes LSE de l'époque. On appelle **profil** chacune de ces façons de se comporter, et on le choisit au lancement :
 
@@ -106,6 +106,7 @@ L'annexe D rassemble toutes ces différences.
   - [4.7 Les messages de LSE](#47-les-messages-de-lse)
   - [4.8 Le bip](#48-le-bip)
   - [4.9 Récapitulatif des touches](#49-récapitulatif-des-touches)
+  - [4.10 Travailler depuis un terminal relié au port série](#410-travailler-depuis-un-terminal-relié-au-port-série)
 
 **Partie II — Le langage**
 
@@ -436,6 +437,7 @@ Les options se placent après le nom du programme, séparées par des espaces. E
 | `-RUBAN chemin` | désigne le fichier qui tient lieu de ruban | `RUBAN` dans la bibliothèque |
 | `-ID n` | identification sous laquelle s'ouvre chaque session (chapitre 11) | 1 sous LSE F4, 0 sinon |
 | `-TEMP n` | taille de l'espace temporaire, en secteurs de 256 octets | 200 |
+| `-SERIE` | la session se déroule sur un terminal relié au port modem (paragraphe 4.10) | écran et clavier de l'Apple IIGS |
 
 Quelques précisions :
 
@@ -446,6 +448,7 @@ Quelques précisions :
 - **`-RUBAN`.** Le fichier désigné sert à la fois à la lecture et à la perforation. Il peut se trouver n'importe où, sur une disquette par exemple.
 - **`-ID`.** Le nombre va de 0 à 65 499. Une identification qui n'a pas été définie (chapitre 11) est remplacée par 0.
 - **`-TEMP`.** Le nombre est un entier strictement positif.
+- **`-SERIE`.** Toute la session passe par le port modem : l'écran et le clavier de l'Apple IIGS ne servent plus. Si le port n'est pas disponible, LSE affiche `PORT SERIE INDISPONIBLE` et rend la main au shell.
 
 Une option inconnue, une option à laquelle manque sa valeur, ou une valeur incorrecte arrête le lancement, sans ouvrir de session :
 
@@ -464,6 +467,7 @@ OPTION INCORRECTE : -ID 70000
 | `LSE -RUBAN :LSE:CHARG` | lecture du ruban CHARG de la disquette |
 | `LSE -UNITE :DISQUETTE:LSE` | une disquette 3,5 pouces sert d'unité amovible |
 | `LSE -ID 0 -TEMP 400` | session sans droit d'écriture, espace temporaire de 400 secteurs |
+| `LSE -SERIE` | session sur un terminal relié au port modem |
 
 ### 2.5 Quitter LSE
 
@@ -746,6 +750,48 @@ LSE émet un bip :
 | `\` | `\` | annule le caractère précédent |
 | `←` | `_` | affectation |
 | `↑` | `^` | puissance |
+
+### 4.10 Travailler depuis un terminal relié au port série
+
+Comme sur les installations d'origine, où chaque élève travaillait à un terminal relié à l'ordinateur, une session de LSE peut se dérouler sur un terminal relié au **port modem** de l'Apple IIGS. Le terminal peut être un autre ordinateur, par exemple un Mac avec son application Terminal, ou un émulateur de terminal.
+
+**Le matériel.** Pour un Mac : un adaptateur USB / RS-232, puis un câble RS-232 / mini-DIN 8 branché sur le port modem de l'Apple IIGS (le port marqué d'un téléphone).
+
+**Le tableau de bord de l'Apple IIGS.** Dans *Slots*, le slot 2 doit être sur *Modem Port*. Dans *Modem Port* (ou *Port modem*), réglez :
+
+| Réglage | Valeur |
+|---|---|
+| vitesse (*Baud*) | 9600 |
+| données, arrêt, parité | 8 bits, 1 bit d'arrêt, sans parité |
+| *XON/XOFF Handshake* | **non** |
+| *DCD Handshake*, *DSR/DTR* | non |
+| *Buffering* | **oui** |
+| *Add LF after CR* | non |
+| *Line Length* | illimitée (*unlimited*) |
+
+AppleTalk ne doit pas occuper le port modem. Un changement des réglages du port modem (vitesse, prise de contact…) est pris en compte sans redémarrer l'Apple IIGS, au lancement suivant de LSE. En revanche, un changement du slot 2 dans *Slots* demande de redémarrer l'Apple IIGS.
+
+La prise de contact *XON/XOFF* doit être coupée, aussi bien à l'Apple IIGS qu'au terminal : sinon, Ctrl-S et Ctrl-Q, qui sont ‹X-OFF› et ‹X-ON› pour LSE, n'arriveraient pas jusqu'à lui.
+
+**Le terminal.** Réglez-le à la même vitesse, 8 bits, sans parité, sans contrôle de flux et **sans écho local** : c'est LSE qui renvoie chaque caractère tapé. Sur un Mac, repérez le nom de l'adaptateur par `ls /dev/cu.*` dans Terminal, puis :
+
+```text
+screen -fn /dev/cu.usbserial-XXXX 9600,cs8,-ixon,-ixoff
+```
+
+`-fn` est indispensable : sans lui, `screen` garde Ctrl-S et Ctrl-Q pour lui-même. On quitte `screen` par Ctrl-A puis `k`.
+
+**Le lancement.** Dans le shell ORCA, sur l'Apple IIGS :
+
+```text
+LSE -SERIE
+```
+
+L'écran de l'Apple IIGS affiche `LSE : SESSION SUR LE PORT SERIE`. Tout le reste se passe au terminal : la question de la date, `EN LIGNE....`, puis la session. Le clavier de l'Apple IIGS ne sert plus jusqu'à la fin de la session ; `AU REVOIR` rend la main au shell, sur l'écran de l'Apple IIGS. Les autres options (paragraphe 2.3) s'ajoutent comme d'habitude, par exemple `LSE -SERIE -T1600`.
+
+**Les touches au terminal.** Ce sont celles du paragraphe 4.9 : Ctrl-S pour ‹X-OFF›, Ctrl-Q pour ‹X-ON›, RETURN, ESC ; sous LSE F4, la touche DELETE du Mac termine aussi une saisie comme ‹X-OFF›, à condition qu'elle envoie le caractère DEL (c'est le réglage ordinaire de Terminal). Les flèches `←` et `↑` s'affichent comme le terminal affiche `_` et `^` : les terminaux de l'époque montraient des flèches, l'application Terminal montre `_` et `^`.
+
+**Interrompre.** ‹ESC› agit comme à l'écran (paragraphe 4.4). Pendant l'exécution d'un programme, LSE ne consulte le terminal que toutes les seize lignes exécutées : l'arrêt peut donc venir quelques lignes plus tard qu'à l'écran.
 
 ---
 
@@ -3678,6 +3724,15 @@ TERMINE EN LIGNE 140
 ---
 
 ## Annexe I. Questions fréquentes et dépannage
+
+**`LSE -SERIE` répond `PORT SERIE INDISPONIBLE`.**
+LSE ne trouve pas le port modem. Au tableau de bord, le slot 2 doit être sur *Modem Port*, et AppleTalk ne doit pas l'occuper (paragraphe 4.10).
+
+**Au terminal, Ctrl-S ou Ctrl-Q sont sans effet.**
+Une prise de contact XON/XOFF les retient : coupez-la au tableau de bord de l'Apple IIGS et au terminal. Avec `screen`, n'oubliez pas `-fn` (paragraphe 4.10).
+
+**Au terminal, chaque caractère tapé s'affiche deux fois.**
+Le terminal fait un écho local : coupez-le, LSE renvoie déjà chaque caractère.
 
 **LSE répond `????` à tout ce que je tape.**
 Vous êtes sans doute en état dormant : tapez `BO` puis ‹X-OFF› pour ouvrir la session. En session, `????` signale une commande inconnue, ou une commande tapée en entier : on ne tape que ses deux lettres.

@@ -137,6 +137,7 @@ Révision : IMP-0143 (Construction §5), le 2026-10-25 : profil `cible` en `#pra
 | IMP-0280 | Interpréteur, §3.1 bis | Réels de 23 bits significatifs, la demie en s'éloignant de zéro, sous `LSE F4` et `-T1600` : constantes, `LIRE`, `CNB`, opérations, puissances, fonctions, pas de `FAIRE` ; entiers exacts jusqu'à 2²³ ; `ALE` tronqué dans ]0,1[ ; impression inchangée ; MITRA 15 inchangé ; statut « retenu » |
 | IMP-0281 | Moniteur et console, §9 bis | À l'écran, `_` s'affiche `←` et `^` s'affiche `↑`, sous les trois profils, sans option : caractères MouseText `$48` et `$4B`, écrits `$C8` et `$CB` (en mode normal, `$C0` à `$DF` s'affichent toujours en MouseText) ; pilote `.CONSOLE` seul ; noyau, fichiers, ruban et repli stdio inchangés ; touches flèches du clavier non traduites ; statut « retenu », vérifié sur l'Apple IIGS |
 | IMP-0282 | Bibliothécaire et fichiers, §7 sexies | Console à 7 bits : un octet de `$80` à `$FF` imprimé par un programme va à la console réduit à ses 7 bits (`EQC(200)` → `H`), sauf s'il devient un ordre `$11` à `$15` (IMP-0275) ; ruban, chaînes et fichiers gardent l'octet entier ; perforateur commandé par `EQC(18)` et `EQC(20)` seuls ; trois profils ; statut « retenu », vérifié sur l'Apple IIGS |
+| IMP-0283 | Moniteur et console, §9 ter | Option `-SERIE` : console de la session sur le port modem, par le pilote que GS/OS engendre pour le slot 2 (premier périphérique de caractères du slot 2 par `DInfo`, ouvert par `OpenGS`) ; `.CONSOLE` non touché, clavier du IIGS ignoré, `PORT SERIE INDISPONIBLE` sinon ; octets tels quels (ni flèches ni curseur) ; ESC par le bit 5 du mot d'état, une interrogation sur seize ; état de la console dans la structure `Voie` (rôle C possible) ; réglages au tableau de bord ; touche du IIGS jetée en fin de session (`$C010`) ; statut « retenu », vérifié sur l'Apple IIGS |
 
 IMP-0134 (Architecture physique §7) révisée le 2026-10-29 : aucun budget ni interrogation au démarrage, l'échec d'allocation fait foi, `RealFreeMem` indicatif, mesure sur cible par la sonde `SONDE` ; mesurée le 2026-10-29 (`audits/Mesures_memoire_IIGS_2026-10-29.md`, `RealFreeMem` 3 589 887 octets) ; statut « retenu ».
 
@@ -189,7 +190,10 @@ Révision du 2026-11-05 (point 5, choix d'Éric ; `audits/Analyse_reels_T1600_20
 - IMP-0222 (Interpréteur §4 bis) et IMP-0212 (Données, `CNB`), complétées : nombre lu arrondi à 23 bits, plus grand nombre (2²³ − 1) × 2¹⁰⁵.
 - IMP-0182 (Compilateur §5 bis), complétée : constante numérique arrondie à 23 bits avant le choix du sous-format.
 
-Prochain identifiant libre : **IMP-0283**.
+Révision du 2026-11-19 (terminal série, points S1 à S6) :
+- IMP-0240 (Moniteur et console §9 bis), complétée : avec `-SERIE`, la console passe sur le port modem ; curseur, flèches et registre du clavier propres à l'écran (IMP-0283).
+
+Prochain identifiant libre : **IMP-0284**.
 Il n'existe pas de chapitre distinct « Compilateur — clause LOCAL » : la déclaration de procédure et la clause `LOCAL` sont traitées par le chapitre Compilateur, §13.
 
 Les plages ci-dessus ont été reconstituées à partir des renvois croisés des chapitres ; vérifier contre les fichiers avant de s'y fier (`grep -rhoE "IMP-[0-9]{4}" 05-IMPLEMENTATION/tome-v | sort -u | tail`).

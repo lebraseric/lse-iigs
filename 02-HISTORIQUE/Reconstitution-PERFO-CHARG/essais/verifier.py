@@ -9,7 +9,7 @@
 # Le ruban est le fichier RUBAN de la bibliotheque, que LSE perfore lui-meme
 # (IMP-0274). Sous le repli stdio, NUL et BEL arrivent a stdout : ils sont retires
 # avant la comparaison, comme la teletype ne les imprimait pas.
-import os, shutil, subprocess, sys, difflib
+import os, re, shutil, subprocess, sys, difflib
 
 ICI = os.path.dirname(os.path.abspath(__file__))
 HAUT = os.path.dirname(ICI)
@@ -130,7 +130,8 @@ def cas_non_attestes(rep):
     lire_ruban(rep, ruban_main('PRONO', Z), F4)
     oui, _ = perfo(rep, 'PRONO', b'OUI', '1 9', F4)
     imp, rub = perfo(rep, 'PRONO', b'NON', '1 9', F4)
-    corps = lambda b: [l.rstrip() for l in b.split(b'\n')[2:-2]]
+    # L'heure de BONJOUR change d'une session a l'autre : elle n'est pas comparee.
+    corps = lambda b: [re.sub(rb'\d\d:\d\d:\d\d', b'hh:mm:ss', l.rstrip()) for l in b.split(b'\n')[2:-2]]
     r.append(('NON : meme imprime, rien de perfore', corps(oui) == corps(imp) and rub == b''))
     imp, rub = perfo(rep, 'NEANT', b'OUI', '1 3', F4)
     r.append(('fichier absent : FICHIER INEXISTANT, rien de perfore', b'FICHIER INEXISTANT' in imp and rub == b''))

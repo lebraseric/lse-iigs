@@ -25,7 +25,7 @@ LSE-IIGS reproduit trois systèmes LSE de l'époque, choisis au lancement :
     matrice-tracabilite/ EXI → VM → IV → IMP → code → test
     audits/              Audits, inventaires, mesures et essais sur l'Apple IIGS
     exemples/            Programmes LSE d'exemple
-06-MANUEL/           Manuel de l'utilisateur (version 1.0)
+06-MANUEL/           Manuel de l'utilisateur (version 1.1)
 src/
     noyau/               Machine virtuelle (indépendante de la plateforme)
     plateforme/          Couche d'adaptation Apple IIGS / GS/OS / ORCA
@@ -50,10 +50,10 @@ Détails : `build/README.md` et `05-IMPLEMENTATION/tome-v/Construction_LSE-IIGS.
 
 ## Statut
 
-**Version 1.0 du logiciel** (novembre 2026).
+**Version 1.1 du logiciel** (novembre 2026). La version 1.1 ajoute le terminal série : `LSE -SERIE` conduit la session depuis un terminal relié au port modem de l'Apple IIGS.
 
-- Tous les chapitres du Tome V sont rédigés ; les décisions d'implémentation vont d'IMP-0101 à IMP-0282 (`05-IMPLEMENTATION/decisions/REGISTRE.md`).
-- Le système est complet : compilation ligne par ligne, décompilation, interpréteur, dialogue conversationnel, fichiers-programmes et fichiers-données, identifications, ENCODER/DECODER, ruban (PERFORER, RUBAN), procédures et fonctions, éditeur de ligne.
+- Tous les chapitres du Tome V sont rédigés ; les décisions d'implémentation vont d'IMP-0101 à IMP-0283 (`05-IMPLEMENTATION/decisions/REGISTRE.md`).
+- Le système est complet : compilation ligne par ligne, décompilation, interpréteur, dialogue conversationnel, fichiers-programmes et fichiers-données, identifications, ENCODER/DECODER, ruban (PERFORER, RUBAN), procédures et fonctions, éditeur de ligne, terminal série.
 - 30 suites de tests, 1 883 contrôles, réussies dans les profils de construction `dev` et `cible` sous Golden Gate ; aller-retour compilation/décompilation à l'octet près sur le corpus d'INRDP75 et de LSE15.
 - Programmes et exécutions imprimés au lycée Victor Duruy (1978-1983) transcrits et rejoués à l'identique, à quelques écarts près, consignés.
 - Un audit de code (2026-10-29, 53 points) a été entièrement traité.
