@@ -10,6 +10,16 @@ LSE-IIGS reproduit trois systèmes LSE de l'époque, choisis au lancement :
 | **T1600 version 4** | LSE du T1600 de Télémécanique, version 4 (1974-1975) | `-T1600` |
 | **MITRA 15 version 8** | LSE du MITRA 15, version 8 | `-MITRA15` |
 
+## Aperçu
+
+Un programme rappelé, listé puis exécuté à l'écran de l'Apple IIGS (ici sous l'émulateur GSSquared) :
+
+![Le programme NOEL listé et exécuté à l'écran de l'Apple IIGS](06-MANUEL/images/ecran-iigs-noel.png)
+
+Une session `LSE F4` conduite depuis une télétype ASR-33 émulée ([asr33emu](https://github.com/progs-n-things/asr33emu)) sur un Mac, reliée par un câble série au port modem d'un vrai Apple IIGS, à 300 bauds : démarrage, bannière, puis une ligne en mode machine de bureau :
+
+![Session LSE F4 sur une télétype ASR-33 émulée](06-MANUEL/images/teletype-asr33.png)
+
 ## Organisation
 
 ```text
@@ -25,7 +35,7 @@ LSE-IIGS reproduit trois systèmes LSE de l'époque, choisis au lancement :
     matrice-tracabilite/ EXI → VM → IV → IMP → code → test
     audits/              Audits, inventaires, mesures et essais sur l'Apple IIGS
     exemples/            Programmes LSE d'exemple
-06-MANUEL/           Manuel de l'utilisateur (version 1.1)
+06-MANUEL/           Manuel de l'utilisateur (version 1.2)
 src/
     noyau/               Machine virtuelle (indépendante de la plateforme)
     plateforme/          Couche d'adaptation Apple IIGS / GS/OS / ORCA
@@ -50,11 +60,11 @@ Détails : `build/README.md` et `05-IMPLEMENTATION/tome-v/Construction_LSE-IIGS.
 
 ## Statut
 
-**Version 1.1 du logiciel** (novembre 2026). La version 1.1 ajoute le terminal série : `LSE -SERIE` conduit la session depuis un terminal relié au port modem de l'Apple IIGS.
+**Version 1.2 du logiciel** (novembre 2026). La version 1.1 a ajouté le terminal série : `LSE -SERIE` conduit la session depuis un terminal relié au port modem de l'Apple IIGS. La version 1.2 ajoute la télétype : avec `LSE -TTY`, la lecture et la perforation des rubans passent par le lecteur et le perforateur d'une télétype ASR-33, ou de son émulation, comme dans les installations d'origine. Au lancement, l'écran de l'Apple IIGS affiche `LSE-IIGS 1.2`.
 
-- Tous les chapitres du Tome V sont rédigés ; les décisions d'implémentation vont d'IMP-0101 à IMP-0283 (`05-IMPLEMENTATION/decisions/REGISTRE.md`).
-- Le système est complet : compilation ligne par ligne, décompilation, interpréteur, dialogue conversationnel, fichiers-programmes et fichiers-données, identifications, ENCODER/DECODER, ruban (PERFORER, RUBAN), procédures et fonctions, éditeur de ligne, terminal série.
-- 30 suites de tests, 1 883 contrôles, réussies dans les profils de construction `dev` et `cible` sous Golden Gate ; aller-retour compilation/décompilation à l'octet près sur le corpus d'INRDP75 et de LSE15.
+- Tous les chapitres du Tome V sont rédigés ; les décisions d'implémentation vont d'IMP-0101 à IMP-0285 (`05-IMPLEMENTATION/decisions/REGISTRE.md`).
+- Le système est complet : compilation ligne par ligne, décompilation, interpréteur, dialogue conversationnel, fichiers-programmes et fichiers-données, identifications, ENCODER/DECODER, ruban (PERFORER, RUBAN), procédures et fonctions, éditeur de ligne, terminal série, télétype avec lecteur et perforateur de ruban.
+- 30 suites de tests, 1 890 contrôles, réussies dans les profils de construction `dev` et `cible` sous Golden Gate ; aller-retour compilation/décompilation à l'octet près sur le corpus d'INRDP75 et de LSE15.
 - Programmes et exécutions imprimés au lycée Victor Duruy (1978-1983) transcrits et rejoués à l'identique, à quelques écarts près, consignés.
 - Un audit de code (2026-10-29, 53 points) a été entièrement traité.
 - Essayé sur Apple IIGS ROM 01, 4 Mo, MicroDrive Turbo, TransWarp GS, GS/OS 6.0.4, ORCA/Shell 2.0.6.

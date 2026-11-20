@@ -25,7 +25,9 @@ int          ruban_en_marche(void);
 int          ruban_lire_ligne(char *texte, unsigned int max, unsigned int *n, unsigned char *fin);
 
 /* PERFORER : chaque ligne est ajoutée à la fin du ruban, suivie de CR.
-   Erreur : F 27. */
+   Erreur : F 27. Sous -TTY (IMP-0284), sur la ligne de la télétype : DC2 et
+   bande vierge à l'ouverture, « CR LF texte X-OFF » par ligne, bande vierge et
+   DC4 à la fermeture. */
 NatureErreur ruban_perforer_ouvrir(void);
 NatureErreur ruban_perforer(const char *texte, unsigned int n);
 void         ruban_perforer_fermer(void);
@@ -33,6 +35,7 @@ void         ruban_perforer_fermer(void);
 /* Sortie d'un programme (IMP-0274, IMP-0275). EQC(18) met le perforateur en
    marche, EQC(20) l'arrête ; en marche, le reste du texte est ajouté au ruban,
    tel quel. EQC(17) à EQC(21) ne vont pas à la console, le reste y va.
+   Sous -TTY (IMP-0284), tout va à la console, réduit à 7 bits.
    Renvoie le nombre de caractères écrits à la console. */
 unsigned int ruban_sortie(const char *texte, unsigned int n);
 /* CR ou LF d'une commande d'AFFICHER : perforé si le perforateur est en marche. */

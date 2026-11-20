@@ -3,6 +3,7 @@
 Thumbs.db
 __pycache__/
 *.pyc
+*.code-workspace
 
 # Doublons créés par iCloud Drive (« fichier 2 », « fichier 2.a »)
 * 2

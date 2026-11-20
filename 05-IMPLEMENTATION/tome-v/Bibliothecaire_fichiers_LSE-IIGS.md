@@ -439,6 +439,8 @@ Le Tome III fixe les responsabilités : le bibliothécaire conserve et restaure 
 
 ## 7 sexies. Ruban, PERFORER, SILENCE (étape 7e2)
 
+Les décisions de ce paragraphe valent pour le fichier-ruban et pour l'écran. Sous l'option `-TTY`, le ruban est celui de la télétype et IMP-0284 (Moniteur et console §9 quater) s'applique : X-ON envoyé aux demandes d'entrée, PERFORER et les ordres `EQC(17)` à `EQC(21)` sur la ligne.
+
 **IMP-0262** — *Le ruban est un fichier texte*
 - Sujet : comment réaliser sur l'Apple IIGS le perforateur et le lecteur de ruban de la télétype (INRDP75 §4-1, §4-2, annexe II §3 et §4 ; LSE15 §9-2) ?
 - Choix : un seul fichier tient lieu de ruban pour le perforateur et le lecteur : `RUBAN` dans la racine de la bibliothèque, ou le fichier désigné par l'option `-RUBAN chemin` (une disquette, par exemple) ; il est créé de type ProDOS TXT, que l'éditeur d'ORCA ouvre : un programme peut ainsi être tapé hors du L.S.E. puis lu ; interface : espace `ESPACE_RUBAN`, `plateforme_ruban_designer`, `plateforme_fichier_creer_texte` ; module `src/noyau/ruban.c` (segment `"codage"`).
@@ -465,7 +467,7 @@ Le Tome III fixe les responsabilités : le bibliothécaire conserve et restaure 
 **IMP-0264** — *PERFORER A PARTIR DE n1{,n2}*
 - Sujet : réalisation de la commande (INRDP75 §4-2, annexe II §3.2 ; LSE15 §9-2).
 - Choix : le programme est listé comme par LISTER (la télétype imprimait ce qu'elle perforait) et ses lignes sont ajoutées à la fin du ruban, chacune suivie de CR, à la façon d'un texte ProDOS, sans LF ni amorce de NUL ; ESC interrompt (LSE15) ; un programme secret donne F 06 ; un ruban plein F 02, une erreur d'écriture F 27.
-- Alternatives envisagées : CR LF et amorce de NUL comme sur le ruban d'INRDP75 (p. 188) — écartée : un fichier texte ProDOS sépare les lignes par CR, et le lecteur ignore LF et NUL.
+- Alternatives envisagées : la forme du ruban d'INRDP75 (p. 188), bande vierge de nuls et lignes `CR LF texte X-OFF` — écartée : un fichier texte ProDOS sépare les lignes par CR, et le lecteur ignore LF et NUL ; elle est réservée au perforateur de la télétype, sous `-TTY` (Moniteur et console IMP-0284, point TT7 du 2026-11-19).
 - Justification : choix d'Éric du 2026-10-27 (H2).
 - Impact mémoire : nul. Impact disque : le ruban s'allonge. Impact performances : une écriture par ligne. Impact historique : commande historique, sur un autre support.
 - Références normatives : VM-2201, VM-2203 ; IV-IF-0004.

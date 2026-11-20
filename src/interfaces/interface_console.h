@@ -2,7 +2,7 @@
    EXI: EXI-0045, EXI-0046 (dialogue)  VM: services d'entrée-sortie (Tome III)
    IMP: IMP-0136 (séparation noyau / plateforme), IMP-0220 ; Moniteur
         IMP-0238 (touches de fin), IMP-0239 (interruption) ; Bibliothécaire
-        et fichiers IMP-0263 (X-ON)
+        et fichiers IMP-0263 (X-ON) ; Moniteur IMP-0284 (télétype)
    Tests: tests/bouchons/console_bouchon.c (réalisation de test)
    Spécification : chapitre Interpréteur §4 bis (IMP-0220).
    Les commandes sont celles d'une console de type télétype (LSE15 §6-2.2) ;
@@ -33,5 +33,9 @@ int          console_fin_entree(void);
 /* Écho de la saisie : 0 le supprime (IDENTIFICATION, SILENCE ; Bibliothécaire
    et fichiers IMP-0254), 1 le rétablit. */
 void         console_echo(int vrai);
+/* Passage à la ligne de l'écho de RETURN : 0 le supprime (lecture au lecteur
+   de la télétype sous MITRA 15, de RUBAN à ESC ; Moniteur IMP-0284), 1 le
+   rétablit. */
+void         console_echo_retour(int vrai);
 
 #endif

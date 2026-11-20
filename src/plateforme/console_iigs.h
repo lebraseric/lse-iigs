@@ -19,5 +19,8 @@ void console_fermer(void);
 int  console_pilote(void);
 /* Vrai : RUB-OUT (DELETE) termine la saisie comme X-OFF, sous LSE F4 (IMP-0238). */
 void console_rubout(int vrai);
+/* Option -TTY (IMP-0284) : le port série est interrogé à chaque appel de
+   console_interruption, au lieu d'une fois sur seize. */
+void console_teletype(void);
 
 #endif

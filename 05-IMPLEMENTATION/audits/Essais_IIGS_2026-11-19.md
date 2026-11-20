@@ -148,3 +148,155 @@ Image : `build/LSE.po`, reconstruite en profil `cible` le 2026-11-19. Mêmes ré
 Essai 5.11 (Éric) : après `AU REVOIR`, le shell affiche un sablier et n'affiche son invite qu'après une touche ; les touches frappées au IIGS pendant la session n'apparaissent pas. Lecture retenue : la dernière touche reste dans le registre du clavier, que personne ne lit pendant une session série, et le shell la trouve en attente à son retour. Correction (option (a), choix d'Éric du 2026-11-19) : `console_fermer` écrit dans `$C010` après `CloseGS` (IMP-0283). L'essai 5.11 bis, conforme sur l'Apple IIGS le même jour, confirme cette lecture. Tous les essais de `LSE -SERIE` sont conformes.
 
 Essai 5.14 : le changement de slot n'a été vu qu'après un redémarrage (§0).
+
+## 6. Télétype ASR-33 émulée (`asr33emu`)
+
+Choix d'Éric du 2026-11-19 (points U1 à U6) : premier terminal historique émulé, la télétype ASR-33, par `asr33emu` (<https://github.com/progs-n-things/asr33emu>, commit `4428033` du 2026-04-28), qui a une liaison série, un lecteur et un perforateur de ruban, et une police d'ASR-33. Tektronix 4010 et ADM-3A viendront ensuite ; aucun émulateur de terminal SINTRA n'a été trouvé. Les essais de ce paragraphe n'appellent aucun changement de code : tout écart qui en demanderait un fera l'objet d'une décision IMP. La question du ruban sous `-SERIE` (fichier-ruban de l'Apple IIGS, IMP-0263 et IMP-0274, ou lecteur et perforateur du terminal) sera posée après ces essais.
+
+### 6.0 Installation sur le Mac (faite le 2026-11-19)
+
+`asr33emu` n'a pas de licence : il n'est pas copié dans le dépôt, mais cloné à côté, dans `~/Code/asr33emu` (ou le dossier que désigne `ASR33EMU`), avec son propre environnement Python :
+
+```
+brew install python-tk@3.14
+cd ~/Code && git clone https://github.com/progs-n-things/asr33emu
+cd asr33emu && git checkout 4428033
+/opt/homebrew/bin/python3.14 -m venv .venv
+.venv/bin/pip install PyYAML pyserial paramiko pygame-ce pillow fonttools
+```
+
+Installé le 2026-11-19 : Python 3.14, Tk 9.1, pygame-ce 2.5.8 (SDL 2.32.10), pyserial 3.5.
+
+Trois défauts d'`asr33emu` sous macOS, contournés sans modifier le clone :
+
+- le frontal Pygame plante dès l'ouverture (`-[SDLApplication macOSVersion]: unrecognized selector`) : SDL crée l'application Cocoa, que Tk 9 croit être la sienne ;
+- le frontal Tk n'enregistre pas sa police (`register_font` ne connaît que Windows et Linux) et retombe sur Courier ;
+- le frontal Tk n'envoie que le caractère de la touche (`event.char`), que Tk sous macOS laisse vide pour RETURN, ESC, delete et les combinaisons Ctrl : ces touches n'étaient pas transmises (constat d'Éric du 2026-11-19 sous GSSquared, pont en `-v` : les lettres passent, rien pour les touches de commande) ;
+- sur le clavier français du Mac, `^` est une touche morte, dont Tk rend le caractère deux fois : à sa frappe, puis en tête du résultat de la composition, à la frappe suivante. `^` puis `1` donnait `$5E $5E $31`, `^` puis espace `$5E $5E` (essai 6.3, trace `ASR33_TOUCHES=1` d'Éric du 2026-11-19 : trois événements `keysym='^' char='^'`, `'^'`, `'1'`, que rien ne distingue) ;
+- les panneaux du lecteur (F1) et du perforateur (F3) s'affichent blancs (essai 6.9), bien que Tk les dise complets (fenêtre de 495 × 250 points, boutons, étiquettes et canevas en place). Essai d'Éric du 2026-11-19 sur quatre variantes : sans le rattachement `transient`, ou cachée puis remontrée, la fenêtre reste blanche ; élargie d'un point puis remise à sa taille, son contenu s'affiche.
+
+D'où le frontal Tk, avec `scripts/terminaux/asr33_macos.py`, qui enregistre `Teletype33.ttf` auprès de CoreText pour le seul processus (rien n'est installé dans `~/Library/Fonts`), remplace la lecture du clavier, puis exécute `asr33emu.py`. Les touches de commande sont reconnues par leur nom (keysym) : RETURN `$0D`, ESC `$1B`, delete et fn-delete `$7F` (RUB-OUT, comme l'application Terminal à l'essai 5.6 et la touche RUB OUT de l'ASR-33), tabulation `$09`, Ctrl avec une lettre `$01` à `$1A` (Ctrl-S `$13`, Ctrl-Q `$11`) ; une touche accentuée n'envoie rien. Le caractère d'une touche morte (`^`, et `` ` `` ou `~` selon la disposition) est retenu, puis envoyé une seule fois avec la frappe suivante : `^` puis `1` donne `$5E $31`, `^` puis espace `$5E`, `^` puis `^` `$5E $5E`, `^` puis `e` (`ê`) `$5E $45`. Sur un clavier où `^` n'est pas une touche morte, il ne part qu'avec la frappe suivante. Chaque panneau du ruban est élargi d'un point puis remis à sa taille 300 ms après son affichage. `ASR33_TOUCHES=1` devant `scripts/terminaux/asr33.sh` trace chaque touche dans la fenêtre du lanceur. Vérifié le 2026-11-19 : Tk voit la famille `Teletype33` ; les octets envoyés pour RETURN, ESC, delete, Ctrl-S, Ctrl-Q, `a`, `_`, `é` et les séquences de touche morte relevées par Éric, par appel direct de la lecture du clavier.
+
+### 6.1 Ce que fait l'émulateur (lecture du source, commit `4428033`)
+
+| Sujet | Constat |
+|---|---|
+| Liaison | `pyserial`, port et format dans le fichier YAML, sans contrôle de flux : Ctrl-S et Ctrl-Q arrivent à `LSE`. `pyserial` accepte aussi un pseudo-terminal : vérifié le 2026-11-19 sur le pont `scripts/pont_serie.py`, les octets `41 13 11 7F 1B 0D 07 5E 5F 0A` passent intacts dans les deux sens. |
+| Vitesse | 10 caractères par seconde dans les deux sens (`data_throttle`) ; F5 bascule. |
+| Impression | 72 colonnes ; avec `autowrap: false`, le chariot reste à la 72ᵉ colonne et les caractères suivants y sont surimprimés. CR ramène le chariot, LF avance le papier sans le ramener. BEL fait sonner la sonnette ; sonnette de marge à la 63ᵉ colonne. Bit 7 retiré à la réception. Séquences ESC retirées (sans effet ici : `LSE` n'en envoie pas). |
+| `$5E`, `$5F` | Glyphes de `Teletype33.ttf` : `$5E` haut et étroit, `$5F` large et à mi-hauteur. Probablement `↑` et `←` : à confirmer à l'œil (essai 6.3). |
+| Clavier | Le caractère que rend Tk, tel quel ; majuscules forcées (`keyboard_uppercase_only`) ; bit 7 à 0 (`space`). Un caractère non ASCII (touche accentuée) fait échouer l'encodage. Sous macOS, Tk ne rend aucun caractère pour les touches de commande : corrigé par le lanceur (§6.0). F1 à F9 : lecteur, perforateur, vitesse, son, capot, LOCAL/LINE, impression ; selon le réglage du Mac, avec `fn`. |
+| Lecteur | Fichier brut choisi dans son panneau (F1), mis en marche et arrêté à la main ; nuls d'amorce sautés, arrêt sur le bloc de nuls qui termine le fichier (des nuls au milieu ne l'arrêtent pas). Les octets partent sur la ligne à la vitesse du clavier. Il ne réagit pas à X-ON ni à X-OFF. |
+| Perforateur | Panneau (F3), mis en marche à la main ; perfore tout ce qui arrive de la ligne (donc aussi l'écho de la frappe par `LSE`). Il ne réagit pas à `$12` ni à `$14`. |
+
+### 6.2 Lancement
+
+Fichiers du dépôt :
+
+- `scripts/terminaux/asr33_lse.yaml` : configuration (frontal Tk, 72 colonnes sans retour automatique, majuscules seules, 9 600 bauds 8N1, 10 caractères par seconde) ;
+- `scripts/terminaux/asr33.sh [PORT] [options]` : remplit le port et le dossier des rubans, puis lance l'émulateur. `PORT` : `gssquared` pour le pont (`/tmp/lse-serie/terminal`), un chemin `/dev/cu.…`, ou rien s'il n'y a qu'un `/dev/cu.usbserial-*` ou `/dev/cu.usbmodem*`. Options utiles : `--baud 110`, `--mute`, `--throttle_rate 30` ;
+- `scripts/terminaux/rubans_asr33.sh` : un ruban `NOM.pt` par programme transcrit de Victor Duruy et par programme reconstitué (`CHARG`, `PERFO`), dans `build/rubans-asr33/` : 20 nuls d'amorce, les lignes terminées par CR, 20 nuls de fin.
+
+Sous GSSquared :
+
+```
+python3 -I scripts/pont_serie.py               # fenêtre 1 ; GSSquared : port modem sur /tmp/lse-serie/emulateur
+scripts/terminaux/rubans_asr33.sh              # une fois
+scripts/terminaux/asr33.sh gssquared           # fenêtre 2
+```
+
+Sur l'Apple IIGS : réglages du §0, puis `scripts/terminaux/asr33.sh` (ou avec le chemin du port). Dans les deux cas, `LSE -SERIE` dans le shell ORCA.
+
+### 6.3 Essais
+
+Sous GSSquared d'abord, puis sur l'Apple IIGS. Les rubans sont ceux de `build/rubans-asr33/`.
+
+| # | Action | Attendu | Constaté |
+|---|---|---|---|
+| 6.1 | Lancer l'émulateur, puis `LSE -SERIE` | Impression à 10 caractères par seconde, avec le bruit de la machine, police d'ASR-33 : `LSE F4`, une ligne blanche, `DATE HEURES MINUTES : ` | OK (GSSquared, 2026-11-19) : bannière imprimée, avec le son ; lettres transmises, écho par `LSE`. RETURN, ESC, delete, Ctrl-S et Ctrl-Q n'étaient pas transmis : corrigé (§6.0), à refaire. Refait : OK |
+| 6.2 | RETURN, puis `BO` Ctrl-S | `EN LIGNE....`, `BONJOUR` complété, la date, la bannière de `LSE F4` et cinq lignes blanches | OK |
+| 6.3 | `10 A_2^10` RETURN, `20 AFFICHER A` RETURN, `30 TERMINER` RETURN ; puis `li` Ctrl-S `10` Ctrl-S, tapé en minuscules | `_` imprimé `←`, `^` imprimé `↑` (relever le dessin) ; `li` arrive en majuscules : `LISTER A PARTIR DE 10` et les trois lignes | La touche `^` affiche la flèche verticale, puis une 2ème lors de l'appuis sur le caractère suivant (comme si on avait appuyé 2 fois sur la touche). Cause : touche morte (§6.0) ; corrigé, à refaire. Refait OK |
+| 6.4 | `EX` Ctrl-S `10` Ctrl-S | `1024`, puis `TERMINE EN LIGNE 030` | OK |
+| 6.5 | `EF` Ctrl-S `*` Ctrl-S ; `10 LIRE B;AFFICHER B` RETURN, `20 TERMINER` RETURN ; `EX` Ctrl-S `10` Ctrl-S ; répondre `7` puis delete | Sonnette à `LIRE` ; delete (RUB-OUT, `$7F`) termine la réponse sous `LSE F4` : `7` | OK |
+| 6.6 | `EF` Ctrl-S `*` Ctrl-S ; `10 I_0` RETURN, `20 I_I+1` RETURN, `30 ALLER EN 20` RETURN ; `EX` Ctrl-S `10` Ctrl-S ; ESC | `PRET EN LIGNE 020` ou `030` | OK |
+| 6.7 | Taper une touche accentuée (`é`), puis `?1` RETURN | Rien n'est envoyé ni imprimé ; `1` | OK |
+| 6.8 | F5, puis `NU` Ctrl-S `10` Ctrl-S ; F5 de nouveau | Impression rapide, puis de nouveau à 10 caractères par seconde | OK |
+| 6.9 | `EF` Ctrl-S `*` Ctrl-S ; F1, charger `PUISS.pt`, mettre en marche le lecteur | Les lignes de PUISS arrivent comme frappées et sont imprimées par l'écho de `LSE` ; arrêt du lecteur sur les nuls de fin || F1 : panneau blanc. Cause : affichage de Tk 9.1 sous macOS (§6.0) ; corrigé, à refaire. Refait, OK |
+| 6.10 | `LI` Ctrl-S `1` Ctrl-S, puis `EX` Ctrl-S `1` Ctrl-S | Listage identique à `PUISS.lse` ; exécution conforme à `executions/PUISS_0006.txt` (aux réponses près) | OK |
+| 6.11 | `EF` Ctrl-S `*` Ctrl-S ; lecteur sur `PRO.pt`, F5 pendant la lecture ; puis `LI` Ctrl-S `1` Ctrl-S à 10 caractères par seconde | Les lignes de plus de 72 caractères sont surimprimées dans la 72ᵉ colonne, comme sur le listage `numerisation0046` de Victor Duruy (comparer les lignes 11 et 12) | OK |
+| 6.12 | F3, choisir un fichier (par exemple `build/rubans-asr33/PERFORE.pt`) et mettre en marche le perforateur ; `LI` Ctrl-S `1` Ctrl-S ; arrêter le perforateur | Le fichier contient le listage, précédé de l'écho de la commande. Relever les fins de ligne (CR LF) et les éventuels nuls ; le relire au lecteur après `EF` : le programme est-il rétabli ? | OK, mais le ruban contient des sauts de ligne supplémentaires, voir le contenu de `build/rubans-asr33/PERFO.pt`. Analyse : chaque fin de ligne est perforée CR CR LF ; le noyau écrit un retour chariot puis un interligne, que la console rendait par CR LF. Corrigé (IMP-0283, point S2 complété, option (b) d'Éric) : LF seul après un CR. Image `LSE.po` reconstruite (`LSE` 249 941 octets) ; 30 suites, profil `cible`. Le perforateur avait écrasé le ruban `PERFO.pt` : `scripts/terminaux/rubans_asr33.sh` le refait |
+| 6.12 bis | Avec la nouvelle image : `EF` Ctrl-S `*` Ctrl-S, lecteur sur `PUISS.pt` ; puis F3, fichier `build/rubans-asr33/PERFORE.pt`, perforateur en marche ; `LI` Ctrl-S `1` Ctrl-S ; arrêter le perforateur ; `od -c build/rubans-asr33/PERFORE.pt` | Chaque fin de ligne perforée `\r \n`, sans CR en double ; impression inchangée | OK |
+| 6.13 | Tableau de bord : port modem à 110 bauds ; `scripts/terminaux/asr33.sh … --baud 110` ; refaire 6.2, 6.4, 6.6 | Même comportement, à la vitesse de la ligne ; relever le délai de réaction à ESC et la frappe d'avance | OK |
+| 6.14 | `AU` Ctrl-S | `AU REVOIR` et la bannière, puis retour au shell sur l'écran du IIGS | OK |
+
+## 7. Télétype : option `-TTY` (IMP-0284)
+
+`LSE -TTY` fait passer la lecture et la perforation des rubans par le lecteur et le perforateur de la télétype (Moniteur et console §9 quater, points TT1 à TT8 du 2026-11-19). Image `LSE.po` reconstruite en profil `cible` (`LSE` 250 992 octets) ; 30 suites, profils `dev` et `cible`, et les deux vérificateurs passent.
+
+**Les ordres de la télétype.** asr33emu n'obéit à aucun des ordres `$11` à `$15`. Lors du premier passage de 7.5 (2026-11-20), le perforateur, mis en marche à la main avant la commande, a enregistré l'écho de `PERFORER A PARTIR DE 1` en tête du ruban, qu'on ne pouvait plus relire. Depuis le 2026-11-20 (option b d'Éric), le lanceur `asr33_macos.py` réalise ces ordres, sans modifier le clone :
+- DC2 met le perforateur en marche, DC4 l'arrête ;
+- X-ON (DC1) met le lecteur en marche, NAK (`$15`) l'arrête ;
+- le lecteur s'arrête de lui-même après chaque X-OFF lu ;
+- ces quatre ordres ne sont pas perforés.
+
+Il suffit donc de **charger** un ruban dans le panneau F1 ou F3 : `LSE -TTY` fait le reste. Le lecteur se met en marche une première fois à la main (*Start*), parce que la demande d'entrée en cours a déjà envoyé son X-ON avant le chargement ; ensuite, `LSE` le relance à chaque ligne. Pour `LSE -SERIE` (essais du §6), lancer `scripts/terminaux/asr33.sh … --manuel` : sans `-TTY`, `LSE` n'envoie pas X-ON, et le lecteur s'arrêterait à chaque ligne.
+
+**Préparation.** `scripts/terminaux/rubans_asr33.sh` refait les rubans de `build/rubans-asr33/` sous la forme attestée : 20 nuls, lignes `CR LF texte X-OFF`, 20 nuls. Il écrase les rubans du même nom, `PERFO.pt` compris.
+
+| # | Action | Attendu | Constaté |
+|---|---|---|---|
+| 7.1 | Dans le shell ORCA : `LSE -TTY -RUBAN X` | `OPTION INCORRECTE : -RUBAN` à l'écran du IIGS, retour au shell sans session | OK |
+| 7.2 | Lancer l'émulateur, puis `LSE -TTY` ; RETURN, `BO` Ctrl-S | Comme 6.1 et 6.2 : `LSE : SESSION SUR LE PORT SERIE` à l'écran du IIGS, bannière de `LSE F4` à la télétype | OK |
+| 7.3 | `EF` Ctrl-S `*` Ctrl-S ; F1, charger `PUISS.pt`, *Start* | Les lignes de PUISS s'impriment séparées par **une** ligne blanche, une aussi avant la première (INRDP75 p. 194, Listage 1) ; le lecteur s'arrête après chaque ligne et repart aussitôt (bouton *Start* et *Stop* alternés) ; arrêt sur les nuls de fin | OK |
+| 7.4 | `LI` Ctrl-S `1` Ctrl-S | Listage identique à `PUISS.lse`, sans ligne blanche | OK |
+| 7.5 | F3, charger le fichier `build/rubans-asr33/PERFORE.pt`, sans le mettre en marche ; `PE` Ctrl-S `1` Ctrl-S ; `od -c build/rubans-asr33/PERFORE.pt` | Impression : `PERFORER A PARTIR DE 1`, puis les lignes, une par ligne, sans ligne blanche après la commande. Le perforateur se met en marche puis s'arrête seul. Ruban : 20 `\0`, puis pour chaque ligne `\r \n` texte `023`, puis 20 `\0`, rien d'autre | Premier passage (2026-11-20), perforateur mis en marche à la main : le ruban commençait par la commande `PERFORER`. Cause : l'émulateur ignorait DC2 ; corrigé (ordres réalisés par le lanceur), à refaire. Refait : OK |
+| 7.6 | `EF` Ctrl-S `*` Ctrl-S ; F1, charger `PERFORE.pt`, *Start* ; puis `LI` Ctrl-S `1` Ctrl-S | Le programme est rétabli ; une ligne blanche entre les lignes lues | OK |
+| 7.7 | `EF` Ctrl-S `*` Ctrl-S ; F1, `PRO.pt` (long programme), *Start* ; F3, charger un ruban ; `PE` Ctrl-S `1` Ctrl-S, puis ESC aussitôt ; `od -c` du ruban | Limite admise (IMP-0284, option A d'Éric, 2026-11-20) : `LSE` a fini d'envoyer le listage avant l'ESC, qui n'est vu qu'à la demande d'entrée suivante. Le programme est perforé en entier, sans perte (ligne 102 comprise), terminé par 20 `\0` ; `PRET` s'imprime après la fin, hors du ruban | KO : ESC n'est pas détecté pendant la perforation. Affiche `PRET` après la fin de la perforation. Analyse (2026-11-20) : (1) le pont et GSSquared ne règlent pas le débit sur la vitesse de la ligne : `LSE` avait fini de tout envoyer avant l'ESC, reçu ensuite à la demande d'entrée suivante, d'où `PRET` imprimé après la fin ; (2) environ 2 400 octets perdus au milieu de la ligne 102 (`PERF_PRO.pt` passe de la ligne 102 à la fin de la ligne 234) : la file de réception d'asr33emu, bornée à 8 blocs, bloquait la lecture du port, et le pseudo-terminal du pont refuse l'écriture au-delà de 1 022 octets en attente. (2) corrigé dans le lanceur (file sans borne) ; (1) en attente d'un choix d'Éric |
+| 7.8 | Ctrl-Q sur une ligne vide, puis `?1` RETURN | Ctrl-Q sans effet (aucune lecture de fichier) ; `1` | KO : la lecture du ruban est lancée. Cause : le lanceur relançait le lecteur sur tout X-ON dès qu'un ruban était chargé ; `LSE`, qui ignore le Ctrl-Q reçu, envoie de nouveau X-ON pour la demande d'entrée suivante. Corrigé (2026-11-20) : le bouton *Start* tient lieu du levier START de l'ASR-33 ; X-ON ne relance le lecteur que si le levier y est ; *Stop* et la fin du ruban le remettent sur STOP. À refaire après *Stop* |
+| 7.9 | F3, charger un ruban ; `10 AFFICHER[U]'A'!EQC(18)!'B'!EQC(20)!'C'` RETURN, `20 TERMINER` RETURN, `EX` Ctrl-S `10` Ctrl-S ; `od -c` du ruban | Impression `ABC` ; le ruban ne contient que `B` : le programme a conduit le perforateur | OK |
+| 7.10 | `AU` Ctrl-S ; `LSE -TTY -MITRA15` ; `BO` Ctrl-S, `RU` Ctrl-S ; F1, charger `PUISS.pt`, *Start* ; à la fin, ESC | Rien d'imprimé pendant la lecture, pas même de ligne blanche (INRDP75 p. 194, Listage 2) ; ESC : `PRET` | OK |
+| 7.11 | `LI` Ctrl-S `1` Ctrl-S ; `AU` Ctrl-S | Le programme lu est listé ; retour au shell | OK |
+| 7.12 | Sur l'Apple IIGS, refaire 7.1 à 7.11 | Mêmes résultats | |
+
+## 8. Télétype au pas de la ligne : vitesse basse, sans tampon (IMP-0284)
+
+But : vérifier que, *Buffering* sur non, `LSE -TTY` marche au pas de la télétype et qu'ESC arrête un listage ou une perforation presque aussitôt (limite de l'essai 7.7). Sur l'Apple IIGS seulement : sous GSSquared, le pont n'impose aucune vitesse de ligne. Depuis le 2026-11-20, sous `-TTY`, `LSE` interroge le port à chaque ligne, et non plus une fois sur seize. Images `LSE.po` (`LSE` 251 053 octets) et `ESSAIS.po` reconstruites en profil `cible` ; 30 suites, profil `cible`.
+
+**Partie A, sonde sans tampon.** Tableau de bord, port modem : réglages du §0, mais *Buffering* sur **non**, 9 600 bauds. Sur le Mac : `screen -fn /dev/cu.… 9600,cs8,-ixon,-ixoff`.
+
+| # | Action | Attendu | Constaté |
+|---|---|---|---|
+| 8.1 | `SONDES` | Comme 1.1 à 1.6 ; relever le mot d'état (1.3) | `mot $0010 (ouvert 0, en ligne 1, recu 0, emission vide 0)` |
+| 8.2 | (suite) | `5 lignes de 80 car. : x ms par ligne` : environ 83 ms (écriture synchrone, au pas de la ligne), et non plus 50 ms (§4) | 83.3 ms |
+| 8.3 | Taper `A`, `z`, `1` sur le Mac | Comme 1.8 : le bit 5 fonctionne sans tampon. **S'il est muet, arrêter ici : la voie sans tampon ne convient pas** | OK |
+| 8.4 | Taper `!`, puis une ligne d'au moins 20 caractères pendant les 5 s | `n octets lus apres la pause` : n vaut environ 3 (réserve du circuit SCC), et non la longueur de la ligne | `3 octets lus apres la pause` |
+| 8.5 | ESC sur le Mac | `FIN SONDE` | OK |
+
+**Partie B, `LSE -TTY` à 300 bauds.** L'adaptateur USB / RS-232 du Mac (FTDI FT232R) ne descend pas sous 183 bauds environ (horloge de 3 MHz, diviseur de 14 bits) : `asr33.sh --baud 110` échoue à l'ouverture du port (`termios.error: (22, 'Invalid argument')`, constat du 2026-11-20 ; 110 et 150 refusés, 200 et 300 acceptés). Le tableau de bord de l'Apple IIGS ne propose pas 200 bauds : l'essai se fait à 300 bauds, l'émulateur imprimant au pas de la ligne (30 caractères par seconde). Il vérifie le mécanisme (`LSE` au pas de la ligne, ESC aussitôt vu) ; les 110 bauds de l'ASR-33 demanderaient un autre adaptateur. Tableau de bord, port modem : 300 bauds, *Buffering* sur non, le reste comme au §0. Sur le Mac : `scripts/terminaux/asr33.sh --baud 300 --throttle_rate 30` (sans `--manuel`), puis, dans le shell ORCA, `LSE -TTY`. Rubans de `build/rubans-asr33/` (§7).
+
+| # | Action | Attendu | Constaté |
+|---|---|---|---|
+| 8.6 | RETURN, `BO` Ctrl-S | Bannière de `LSE F4`, imprimée au pas de la ligne | OK |
+| 8.7 | `EF` Ctrl-S `*` Ctrl-S ; F1, charger `PUISS.pt`, *Start* ; puis `LI` Ctrl-S `1` Ctrl-S | Lecture complète, une ligne blanche entre les lignes lues ; listage identique à `PUISS.lse` (aucun caractère perdu sans tampon) | OK |
+| 8.8 | `EF` Ctrl-S `*` Ctrl-S ; F1, `PRO.pt`, *Start* ; puis `NU` Ctrl-S `1` Ctrl-S | Lecture complète de PRO (plusieurs minutes), aucune erreur de compilation ; `NUMERO` donne les 115 lignes de `PRO.lse` | OK |
+| 8.9 | F3, charger un ruban ; `PE` Ctrl-S `1` Ctrl-S ; ESC pendant la 3ᵉ ligne imprimée | L'impression et la perforation s'arrêtent après la ligne en cours, ou la suivante ; bande vierge, puis `PRET`. Ruban : quelques lignes, 20 `\0`, rien d'autre | OK |
+| 8.10 | `LI` Ctrl-S `1` Ctrl-S ; ESC pendant la 3ᵉ ligne | `PRET` après la ligne en cours ou la suivante | OK |
+| 8.11 | `EF` Ctrl-S `*` Ctrl-S ; `5 I_0` RETURN, `10 I_I+1` RETURN, `20 ALLER EN 10` RETURN ; `EX` Ctrl-S `5` Ctrl-S ; ESC | `PRET EN LIGNE 010` ou `020`, aussitôt | OK. Attention, il fallait initialiser I avant la ligne 10, sinon `ERREUR (EX.) 05 EN LIGNE 010` |
+| 8.12 | `AU` Ctrl-S ; remettre au tableau de bord 9 600 bauds et *Buffering* sur oui | Réglages de `-SERIE` (§0) rétablis | OK |
+
+**Décision attendue.** Si 8.3, 8.7 à 8.11 sont conformes : compléter IMP-0284 et le manuel (§12.11) avec les réglages de la télétype, vitesse de la télétype (110 bauds pour une ASR-33, si l'adaptateur le permet) et *Buffering* non. Si 8.3 échoue (bit 5 muet sans tampon) : garder le tampon et la limite de l'option A. Si 8.7 ou 8.8 perdent des caractères : la réserve du SCC ne suffit pas pendant la compilation d'une ligne ; revoir.
+
+**Bilan (2026-11-20).** 8.1 à 8.11 conformes sur l'Apple IIGS. L'attendu de 8.11 omettait d'initialiser I (`ERREUR (EX.) 05 EN LIGNE 010` sinon, constat d'Éric) : ligne 5 ajoutée. Sans tampon, `LSE -TTY` marche au pas de la ligne, la lecture ne perd rien, et ESC arrête PERFORER, LISTER et une boucle à la ligne suivante. Décision : réglages de la télétype consignés dans IMP-0284 (sa vitesse, *Buffering* non) et au manuel (§12.11) ; *Buffering* reste sur oui pour `-SERIE`.
+
+## 9. Bannière du logiciel (IMP-0285)
+
+Image `LSE.po` reconstruite en profil `cible` le 2026-11-20 (`LSE` 251 215 octets).
+
+| # | Action | Attendu | Constaté |
+|---|---|---|---|
+| 9.1 | `LSE` | À l'écran : `LSE-IIGS 1.2`, une ligne blanche, puis `LSE F4` et `DATE HEURES MINUTES :` | OK |
+| 9.2 | `LSE -T1600` | `LSE-IIGS 1.2`, une ligne blanche, puis l'état dormant (rien d'autre) | OK |
+| 9.3 | `LSE -TTY` (ou `-SERIE`), avec le terminal | À l'écran du IIGS : `LSE-IIGS 1.2` puis `LSE : SESSION SUR LE PORT SERIE`. Au terminal : `LSE F4` en première ligne, sans la bannière | OK |
+| 9.4 | `LSE -TTY -RUBAN X` | `OPTION INCORRECTE : -RUBAN`, sans bannière | OK |
+
+**Bilan (2026-11-20).** 9.1 à 9.4 conformes sur l'Apple IIGS : IMP-0285 vérifiée.

@@ -3,7 +3,8 @@
    VM: VM-2201
    IMP: IMP-0262 (ruban), IMP-0263 (lecture), IMP-0264 (PERFORER), IMP-0274
         (perforateur piloté par programme), IMP-0275 (ordres à la télétype),
-        IMP-0282 (console à 7 bits)
+        IMP-0282 (console à 7 bits) ; Moniteur et console IMP-0284 (télétype :
+        PERFORER et ordres à la télétype sur la ligne, fichier jamais employé)
    Tests: tests/composants/composants_moniteur.c,
           tests/composants/composants_entrees_sorties.c
    Spécification : chapitre Bibliothécaire et fichiers §7 sexies. Segment
@@ -15,6 +16,7 @@
 #include "ruban.h"
 #include "../interfaces/interface_fichiers.h"
 #include "../interfaces/interface_console.h"
+#include "../interfaces/types_communs.h"
 
 segment "codage";
 
@@ -28,6 +30,7 @@ segment "codage";
 #define CAR_NAK  0x15                    /* EQC(21) : arrêt du lecteur */
 #define CAR_ESC  0x1B
 #define BLOC     256u
+#define BANDE    20u                     /* nuls de bande vierge (IMP-0284) */
 
 static int           en_marche = 0;
 static unsigned long position = 0;       /* prochain caractère à lire */
@@ -104,8 +107,25 @@ int ruban_lire_ligne(char *texte, unsigned int max, unsigned int *n, unsigned ch
     }
 }
 
+/* --- PERFORER sur la télétype (IMP-0284) ------------------------------------
+   DC2, bande vierge, lignes « CR LF texte X-OFF » (INRDP75 p. 188), bande
+   vierge, DC4. La télétype imprime ce qu'elle perfore. */
+
+static void bande_vierge(void)
+{
+    static const char nuls[BANDE] = { 0 };
+    console_ecrire(nuls, BANDE);
+}
+
 NatureErreur ruban_perforer_ouvrir(void)
 {
+    static const char dc2[1] = { CAR_DC2 };
+
+    if (configuration_session.teletype) {
+        console_ecrire(dc2, 1);
+        bande_vierge();
+        return ERR_AUCUNE;
+    }
     if (plateforme_fichier_creer_texte(ESPACE_RUBAN, "RUBAN") != PLAT_OK) return ERR_F_ENTREE_SORTIE;
     if (plateforme_fichier_ouvrir(ESPACE_RUBAN, "RUBAN", FICHIER_MISE_A_JOUR, &perfo) != PLAT_OK) {
         perfo = NULL;
@@ -117,8 +137,16 @@ NatureErreur ruban_perforer_ouvrir(void)
 NatureErreur ruban_perforer(const char *texte, unsigned int n)
 {
     static const char cr[1] = { CAR_CR };
+    static const char xoff[1] = { CAR_XOFF };
     unsigned long fin;
 
+    if (configuration_session.teletype) {
+        console_retour_chariot();
+        console_interligne();
+        console_ecrire(texte, n);
+        console_ecrire(xoff, 1);
+        return ERR_AUCUNE;
+    }
     if (perfo == NULL) return ERR_F_ENTREE_SORTIE;
     fin = plateforme_fichier_taille(perfo);
     if (plateforme_fichier_ecrire(perfo, fin, texte, n) != PLAT_OK
@@ -129,6 +157,13 @@ NatureErreur ruban_perforer(const char *texte, unsigned int n)
 
 void ruban_perforer_fermer(void)
 {
+    static const char dc4[1] = { CAR_DC4 };
+
+    if (configuration_session.teletype) {
+        bande_vierge();
+        console_ecrire(dc4, 1);
+        return;
+    }
     if (perfo != NULL) plateforme_fichier_fermer(perfo);
     perfo = NULL;
     bloc_lg = 0;
@@ -167,6 +202,18 @@ unsigned int ruban_sortie(const char *texte, unsigned int n)
     int c;
     char sept;
 
+    if (configuration_session.teletype) {   /* tout part sur la ligne, à 7 bits (IMP-0284) */
+        for (i = 0; i <= n; i++) {
+            if (i < n && ((unsigned char) texte[i] & 0x80) == 0) continue;
+            if (i > debut_console) console_ecrire(texte + debut_console, i - debut_console);
+            debut_console = i + 1;
+            if (i < n) {
+                sept = (char) (texte[i] & 0x7F);
+                console_ecrire(&sept, 1);
+            }
+        }
+        return n;
+    }
     for (i = 0; i <= n; i++) {
         c = i < n ? (unsigned char) texte[i] : -1;
         if (i == n || (c >= CAR_XON && c <= CAR_NAK) || c >= 0x80) {

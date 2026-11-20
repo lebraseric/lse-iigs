@@ -4,7 +4,9 @@
         IMP-0186 (-LIBELLES), IMP-0196 (configuration de session), IMP-0228,
         IMP-0245 (-BIB), IMP-0253 (-TEMP), IMP-0258 (-UNITE), IMP-0262 (-RUBAN), IMP-0268 (-ID),
         IMP-0270 (blocs rendus en fin de session), IMP-0272 (pile de 16 Kio),
-        IMP-0283 (-SERIE : console sur le port modem)
+        IMP-0283 (-SERIE : console sur le port modem),
+        IMP-0284 (-TTY : télétype, lecteur et perforateur du terminal),
+        IMP-0285 (bannière du logiciel à l'écran de l'Apple IIGS)
    Spécification : chapitre Moniteur et console §2, §9 bis, §9 ter. Segment blanc. */
 
 #pragma stacksize 16384                         /* IMP-0272 */
@@ -26,6 +28,10 @@
 #include "../interfaces/profil.h"
 
 ConfigurationSession configuration_session = { PROFIL_T1600_F4, 0 };
+
+/* Version du logiciel (IMP-0285), reprise par le README et le manuel. */
+#define LSE_VERSION "1.2"
+#define BANNIERE    "LSE-IIGS " LSE_VERSION
 
 /* Nombre décimal de min à max ; 0 si l'argument n'en est pas un (IMP-0253, IMP-0268). */
 static int nombre_option(const char *s, unsigned long min, unsigned long max, unsigned long *v)
@@ -70,6 +76,7 @@ int main(int argc, char *argv[])
     char t[100];
     int id_choisie = 0;
     int serie = 0;                               /* IMP-0283 */
+    int ruban = 0;                               /* -RUBAN donnée (IMP-0284) */
 
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-F4") == 0) configuration_session.profil = PROFIL_T1600_F4;
@@ -77,13 +84,20 @@ int main(int argc, char *argv[])
         else if (strcmp(argv[i], "-MITRA15") == 0) configuration_session.profil = PROFIL_MITRA15_V8;
         else if (strcmp(argv[i], "-LIBELLES") == 0) configuration_session.libelles = 1;
         else if (strcmp(argv[i], "-SERIE") == 0) serie = 1;
+        else if (strcmp(argv[i], "-TTY") == 0) {                               /* IMP-0284 */
+            serie = 1;
+            configuration_session.teletype = 1;
+        }
         else if (strcmp(argv[i], "-BIB") != 0 && strcmp(argv[i], "-UNITE") != 0
                  && strcmp(argv[i], "-RUBAN") != 0 && strcmp(argv[i], "-ID") != 0
                  && strcmp(argv[i], "-TEMP") != 0) return option_incorrecte(argv[i], NULL);
         else if (i + 1 >= argc || argv[i + 1][0] == '\0') return option_incorrecte(argv[i], NULL);
         else if (strcmp(argv[i], "-BIB") == 0) bib = argv[++i];
         else if (strcmp(argv[i], "-UNITE") == 0) plateforme_unite_designer(argv[++i]);
-        else if (strcmp(argv[i], "-RUBAN") == 0) plateforme_ruban_designer(argv[++i]);
+        else if (strcmp(argv[i], "-RUBAN") == 0) {
+            plateforme_ruban_designer(argv[++i]);
+            ruban = 1;
+        }
         else if (strcmp(argv[i], "-ID") == 0) {                                /* IMP-0268 */
             if (!nombre_option(argv[i + 1], 0ul, (unsigned long) IDENTIFICATION_MAX, &v))
                 return option_incorrecte(argv[i], argv[i + 1]);
@@ -97,21 +111,33 @@ int main(int argc, char *argv[])
             i++;
         }
     }
+    if (ruban && configuration_session.teletype)     /* le ruban est sur la télétype (IMP-0284) */
+        return option_incorrecte("-RUBAN", NULL);
     if (!id_choisie && configuration_session.profil == PROFIL_T1600_F4)
         moniteur_fixer_identification(1);               /* Victor Duruy (IMP-0276) */
     if (!programme_initialiser()) {
         objets_terminer();                          /* IMP-0270 */
         return 1;
     }
-    if (!serie) console_ouvrir();
-    else if (console_ouvrir_serie())             /* IMP-0283 : écran du IIGS */
+    if (!serie) {
+        console_ouvrir();
+        if (console_pilote()) {                  /* IMP-0285 : pas sous Golden Gate */
+            console_ecrire(BANNIERE, (unsigned int) strlen(BANNIERE));
+            console_retour_chariot();
+            console_interligne();
+            console_interligne();
+        }
+    } else if (console_ouvrir_serie()) {         /* IMP-0283 : écran du IIGS */
+        fputs(BANNIERE "\n", stdout);           /* IMP-0285 : jamais au terminal */
         fputs("LSE : SESSION SUR LE PORT SERIE\n", stdout);
+    }
     else {
         fputs("PORT SERIE INDISPONIBLE\n", stdout);
         objets_terminer();                          /* IMP-0270 */
         return 1;
     }
     console_rubout(configuration_session.profil == PROFIL_T1600_F4);   /* IMP-0238 */
+    if (configuration_session.teletype) console_teletype();            /* IMP-0284 */
     plateforme_volume_permettre(console_pilote());     /* IMP-0257 */
     if (plateforme_bibliotheque_ouvrir(bib) != PLAT_OK) {   /* bibliothèque inaccessible (IMP-0250) */
         erreurs_formater_fichier(ERR_F_BIBLIOTHEQUE, 0, 0, configuration_session.libelles, t, sizeof t);

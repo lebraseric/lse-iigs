@@ -1,0 +1,73 @@
+# asr33_lse.yaml — configuration de l'émulateur de télétype ASR-33 asr33emu
+# (https://github.com/progs-n-things/asr33emu, commit 4428033) pour une session
+# de LSE -SERIE (IMP-0283). Modèle : scripts/terminaux/asr33.sh y remplace
+# @PORT@ et @RUBANS@ avant de lancer l'émulateur.
+# Essais : 05-IMPLEMENTATION/audits/Essais_IIGS_2026-11-19.md, §6.
+
+frontend:
+  # Tk. Sous macOS, le frontal Pygame plante à l'ouverture (SDL et Tk 9 se
+  # disputent l'application Cocoa) ; la police Teletype33 est enregistrée pour
+  # le frontal Tk par scripts/terminaux/asr33_macos.py.
+  type: "tkinter"
+
+sound:
+  config:
+    lid: "up"
+    mute_state: "unmuted"
+
+terminal:
+  config:
+    mode: "line"
+    columns: 72
+    rows: 24
+    scrollback: 2000
+    # Comme la machine : le chariot reste à la 72e colonne, les caractères
+    # suivants y sont surimprimés.
+    autowrap: false
+    # Clavier de l'ASR-33 : majuscules seules.
+    keyboard_uppercase_only: true
+    # Bit 7 à 0 (LSE le retire de toute façon, IMP-0283).
+    keyboard_parity_mode: "space"
+    send_cr_at_startup: false
+    no_print: false
+    font_path: null
+    font_size: 20
+
+backend:
+  type: "serial"
+  serial_config:
+    port: "@PORT@"
+    # Réglages du port modem au tableau de bord de l'Apple IIGS (IMP-0283).
+    # Sans contrôle de flux : pyserial n'en demande aucun, Ctrl-S et Ctrl-Q
+    # arrivent à LSE.
+    baudrate: 9600
+    databits: 8
+    parity: "N"
+    stopbits: 1
+
+data_throttle:
+  config:
+    # 10 caractères par seconde dans les deux sens, comme l'ASR-33 ; F5 bascule.
+    mode: "throttled"
+    send_rate_cps: 10
+    receive_rate_cps: 10
+
+tape_reader:
+  config:
+    max_rows: 200
+    initial_file_path: "@RUBANS@"
+    skip_leading_nulls: true
+    auto_stop: true
+    set_msb: false
+    ghost_outline: true
+    bit_label_base: 1
+    ascii_char_mask_msb: true
+
+tape_punch:
+  config:
+    max_rows: 200
+    initial_file_path: "@RUBANS@"
+    mode: "overwrite"
+    ghost_outline: true
+    bit_label_base: 1
+    ascii_char_mask_msb: true

@@ -13,7 +13,8 @@
         DUPLIQUER, étape 7d ; IMP-0268, identification initiale), IMP-0260 et IMP-0261 (DECODER, ENCODER, étape 7e1),
         IMP-0263 à IMP-0265 (ruban, PERFORER, SILENCE, étape 7e2), IMP-0274
         (perforateur arrêté au retour au moniteur), IMP-0266
-        (bannières), IMP-0267 (éditeur de ligne) ; Gestionnaire des tâches
+        (bannières), IMP-0267 (éditeur de ligne), IMP-0284 (télétype : X-ON
+        aux demandes d'entrée, PERFORER sur la ligne) ; Gestionnaire des tâches
         IMP-0269 (transitions de la tâche aux demandes d'entrée)
    Tests: tests/composants/composants_moniteur.c
    Spécification : chapitre Moniteur et console. Segment "moniteur" (IMP-0227). */
@@ -198,7 +199,8 @@ static void echappement(void)
     }
 }
 
-/* Lit une entrée, au clavier ou sur le ruban (IMP-0263), et applique la
+/* Lit une entrée, au clavier, sur le ruban (IMP-0263) ou au lecteur de la
+   télétype (IMP-0284), et applique la
    correction « \ » ; rend sa longueur. */
 static unsigned int lire_entree(void)
 {
@@ -208,9 +210,22 @@ static unsigned int lire_entree(void)
     unsigned int k = 0;
     int r;
     int lu_ruban = 0;
+    int lecteur;
+    static const char xon[1] = { 0x11 };
 
     taches_suspendre();                    /* demande d'entrée (INRDP75 §3-1, IMP-0269) */
     for (;;) {
+        if (configuration_session.teletype) {          /* lecteur de la télétype (IMP-0284) */
+            lecteur = PROFIL_EST_T1600(configuration_session.profil) || ruban_en_marche();
+            if (lecteur) console_ecrire(xon, 1);       /* mise en route jusqu'au prochain X-OFF */
+            if (lecteur && !PROFIL_EST_T1600(configuration_session.profil))
+                console_echo_retour(0);                /* RUBAN : rien d'imprimé (IMP-0263) */
+            n = console_lire_ligne(brut, sizeof brut, &fin_entree);
+            console_echo_retour(1);
+            if (fin_entree == SAISIE_XON) continue;    /* X-ON reçu : sans effet */
+            lu_ruban = lecteur;
+            break;
+        }
         if (ruban_en_marche()) {
             if (console_interruption()) {
                 fin_entree = SAISIE_ESC;
@@ -417,6 +432,8 @@ static void lister(const char *t, unsigned int n, int mode)
     EntreeObjetCompile e;
     char texte[DECOMPILATEUR_LONGUEUR_MAX + 1];
     NatureErreur r = ERR_AUCUNE;
+    int tty = mode == 2 && configuration_session.teletype;   /* IMP-0284 */
+    int interrompu = 0;
 
     if (!lignes(t, n, &n1, &n2)) {
         erreur_dialogue(ERR_D_PARAMETRE);
@@ -435,7 +452,8 @@ static void lister(const char *t, unsigned int n, int mode)
         if (n2 != 0 && e.numero_ligne > n2) break;
         if (console_interruption()) {                         /* IMP-0239 */
             echappement();
-            message("PRET");
+            if (tty) interrompu = 1;                          /* PRET après DC4 (IMP-0284) */
+            else message("PRET");
             break;
         }
         if (mode == 1) {                                      /* point M4 */
@@ -454,6 +472,11 @@ static void lister(const char *t, unsigned int n, int mode)
                 a_la_ligne();
                 colonne = 0;
             }
+        } else if (tty) {                                     /* la télétype imprime ce qu'elle perfore */
+            if (decompilateur_decompiler(&e, texte, &lg) != DECOMP_OK) lg = 0;
+            viser(texte, lg);
+            r = ruban_perforer(texte, lg);
+            interprete_debut_de_ligne(0);
         } else {
             if (decompilateur_decompiler(&e, texte, &lg) != DECOMP_OK) lg = 0;
             if (lg > 0) {
@@ -468,6 +491,8 @@ static void lister(const char *t, unsigned int n, int mode)
     if (colonne != 0) a_la_ligne();
     if (mode == 2) {
         ruban_perforer_fermer();
+        if (tty) a_la_ligne();                                /* après DC4 : non perforé */
+        if (interrompu) message("PRET");
         if (r != ERR_AUCUNE) erreur_fichier(r);
     }
 }
@@ -1581,7 +1606,9 @@ static void commande(Commande c)
         }
         memcpy(t, entree, n);
     }
-    if (fin_entree == SAISIE_XOFF) a_la_ligne();
+    /* sur la télétype, le CR LF perforé en tête de chaque ligne change de ligne
+       (INRDP75 p. 188 et 193 ; IMP-0284) */
+    if (fin_entree == SAISIE_XOFF && !(c == CMD_PERFORER && configuration_session.teletype)) a_la_ligne();
     if (!plateforme_bibliotheque_disponible()                /* IMP-0250 : F 102 au lancement */
         && (c == CMD_RANGER || c == CMD_MODIFIER || c == CMD_APPELER || c == CMD_SUPPRIMER
             || c == CMD_CATALOGUER || c == CMD_IDENTIFICATION || c == CMD_TABLE

@@ -1,6 +1,6 @@
 /* composants_moniteur.c — sessions complètes du moniteur
    EXI: EXI-0028, EXI-0029, EXI-0051, EXI-0052  VM: VM-2201
-   IMP: IMP-0227 à IMP-0239
+   IMP: IMP-0227 à IMP-0239, IMP-0284 (télétype, -TTY)
    Spécification des tests : chapitre Moniteur et console §10 ; dialogues
    d'INRDP75 (PG1, PG3) ; essais d'Éric sur LSE 8086 du 2026-10-24.
    Niveau : composants. Console : tests/bouchons/console_bouchon.c (une
@@ -24,6 +24,7 @@ ConfigurationSession configuration_session = { PROFIL_MITRA15_V8, 0 };
 segment "suite";            /* le segment blanc dépasserait 64 Kio en profil dev */
 
 extern char bouchon_affichage[];
+extern unsigned int bouchon_lg;
 void bouchon_console(const char *const *lignes);
 void bouchon_interruption(unsigned int rang);
 
@@ -53,6 +54,22 @@ static int egal(const char *attendu)
 {
     if (strcmp(bouchon_affichage, attendu) == 0) return 1;
     printf("  [%s]\n    attendu [%s]\n", bouchon_affichage, attendu);
+    return 0;
+}
+
+/* Comme contient, pour un affichage qui contient des nuls (télétype, IMP-0284). */
+static int contient_n(const char *attendu, unsigned int lg)
+{
+    unsigned int i;
+    for (i = 0; i + lg <= bouchon_lg; i++)
+        if (memcmp(bouchon_affichage + i, attendu, lg) == 0) return 1;
+    printf("  l'affichage (%u octets) ne contient pas la suite attendue de %u octets :\n  [", bouchon_lg, lg);
+    for (i = 0; i < bouchon_lg; i++) {
+        unsigned char c = (unsigned char) bouchon_affichage[i];
+        if (c >= 0x20 && c < 0x7F) printf("%c", c);
+        else printf("<%02X>", c);
+    }
+    printf("]\n");
     return 0;
 }
 
@@ -542,6 +559,49 @@ int main(void)
     VERIFIER(contient("(EX.) 52 EN LIGNE 010"));
     plateforme_ruban_designer(NULL);
     plateforme_fichier_supprimer(ESPACE_RUBAN, "RUBAN");
+
+    /* --- télétype : lecteur et perforateur du terminal (-TTY, IMP-0284) ------------- */
+    plateforme_fichier_supprimer(ESPACE_RUBAN, "RUBAN");
+    configuration_session.teletype = 1;
+    configuration_session.profil = PROFIL_T1600_V4;
+    SESSION("BO" X, "10 A_1" X, "20 B_2" X, "PE" X, "1" X, "AU" X);
+    {   /* X-ON avant chaque demande d'entrée ; DC2, bande vierge, CR LF texte X-OFF, DC4 */
+        static const char attendu[] =
+            "\x11" "BONJOUR  03/11/72 13:03:52\r\n\x11" "10 A_1\r\n\x11" "20 B_2\r\n"
+            "\x11" "PERFORER A PARTIR DE \x11" "1\x12"
+            "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+            "\r\n10 A_1\x13\r\n20 B_2\x13"
+            "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+            "\x14\r\n\x11" "AU REVOIR";
+        VERIFIER(contient_n(attendu, sizeof attendu - 1));
+    }
+    VERIFIER(!plateforme_fichier_existe(ESPACE_RUBAN, "RUBAN"));   /* fichier-ruban jamais employé */
+    /* relecture de ce ruban : le CR qui suit X-OFF forme une ligne vide, d'où une
+       ligne blanche (INRDP75 p. 194, Listage 1) ; X-ON reçu sans effet */
+    SESSION("BO" X, "", "10 A_1" X, "", "20 B_2" X, XON, "LI" X, "1" X, "AU" X);
+    VERIFIER(contient("BONJOUR  03/11/72 13:03:52\r\n\x11\r\n\x11" "10 A_1\r\n\x11\r\n\x11" "20 B_2\r\n"
+                      "\x11\x11" "LISTER A PARTIR DE \x11" "1\r\n10 A_1\r\n20 B_2\r\n"));
+    {   /* ESC pendant PERFORER : bande vierge et DC4, puis PRET */
+        static const char *const r_[] = { "BO" X, "10 A_1" X, "20 B_2" X, "PE" X, "1" X, "AU" X, NULL };
+        static const char attendu[] =
+            "1\x12\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+            "\r\n10 A_1\x13\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x14\r\nPRET\r\n\x11" "AU";
+        bouchon_console(r_);
+        bouchon_interruption(2);
+        moniteur_session();
+        VERIFIER(contient_n(attendu, sizeof attendu - 1));
+    }
+    configuration_session.profil = PROFIL_MITRA15_V8;
+    /* MITRA 15 : X-ON de RUBAN à ESC seulement ; rien d'imprimé, RETURN compris */
+    SESSION("BO" X, "RU" X, "", "10 A_1" X, "", "20 B_2" X, "" ESC, "LI" X, "1" X, "AU" X);
+    VERIFIER(contient("LSE-MI15  CONSOLE NO.01  03/11/72 13:03:52\r\nRUBAN\r\n\x11\x11\x11\x11\x11"
+                      "PRET\r\nLISTER A PARTIR DE 1\r\n10 A_1\r\n20 B_2\r\nAU"));
+    /* ordres à la télétype imprimés par un programme : sur la ligne, à 7 bits */
+    SESSION("BO" X, "10 AFFICHER[U]'A'!EQC(18)!'B'!EQC(20)!EQC(17)!EQC(21)!EQC(200)" X, "20 TERMINER" X,
+            "EX" X, "10" X, "AU" X);
+    VERIFIER(contient("\r\nA\x12" "B\x14\x11\x15H\r\nTERMINE\r\n"));
+    VERIFIER(!plateforme_fichier_existe(ESPACE_RUBAN, "RUBAN"));
+    configuration_session.teletype = 0;
 
     /* --- éditeur de ligne (LAFOND83 p. 133-134, MEMENTO82 §4, IMP-0267) ------------- */
     SESSION("BO" X, "/A/B" X, "10 AFICHER A" X, "/F/FF" X, "10 X_SCH(A,1,3)!SCH(B,1)" X, "X2/)/,3)" X,

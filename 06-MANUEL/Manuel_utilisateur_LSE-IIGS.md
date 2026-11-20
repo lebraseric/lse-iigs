@@ -1,6 +1,6 @@
 # LSE-IIGS — Manuel de l'utilisateur
 
-**Version 1.1 du logiciel — manuel du 19 novembre 2026**
+**Version 1.2 du logiciel — manuel du 20 novembre 2026**
 
 ---
 
@@ -211,6 +211,7 @@ L'annexe D rassemble toutes ces différences.
   - [12.8 Un programme qui perfore : EQC(18) et EQC(20)](#128-un-programme-qui-perfore--eqc18-et-eqc20)
   - [12.9 Sauvegarder des données sur ruban : PERFO et CHARG](#129-sauvegarder-des-données-sur-ruban--perfo-et-charg)
   - [12.10 Les caractères de commande du ruban](#1210-les-caractères-de-commande-du-ruban)
+  - [12.11 La télétype : option -TTY](#1211-la-télétype--option--tty)
 
 **Annexes**
 
@@ -392,9 +393,11 @@ Ranger un programme demande le droit de créer des programmes. Sous le profil LS
 
 ### 2.1 Lancer LSE
 
-Dans le shell ORCA, tapez `LSE`, éventuellement suivi d'options (paragraphe 2.3), puis ‹RETURN›. Sous le profil LSE F4, LSE commence par demander la date et l'heure :
+Dans le shell ORCA, tapez `LSE`, éventuellement suivi d'options (paragraphe 2.3), puis ‹RETURN›. La première ligne, `LSE-IIGS 1.2`, identifie le logiciel et sa version ; elle ne fait pas partie de la session. Sous le profil LSE F4, LSE demande ensuite la date et l'heure :
 
 ```text
+LSE-IIGS 1.2
+
 LSE F4
 
 DATE HEURES MINUTES : 
@@ -408,7 +411,7 @@ EN LIGNE....
 
 LSE est alors prêt, mais **en sommeil** : il attend qu'on ouvre une session par la commande `BONJOUR` (chapitre 3). Cet état s'appelle l'**état dormant** (paragraphe 4.1).
 
-> **Sous `-T1600` et `-MITRA15`** LSE ne demande pas la date : il passe directement à l'état dormant, sans rien afficher.
+> **Sous `-T1600` et `-MITRA15`** LSE ne demande pas la date : après la ligne `LSE-IIGS 1.2`, il passe directement à l'état dormant, sans rien afficher d'autre.
 
 ### 2.2 La question de la date
 
@@ -438,6 +441,7 @@ Les options se placent après le nom du programme, séparées par des espaces. E
 | `-ID n` | identification sous laquelle s'ouvre chaque session (chapitre 11) | 1 sous LSE F4, 0 sinon |
 | `-TEMP n` | taille de l'espace temporaire, en secteurs de 256 octets | 200 |
 | `-SERIE` | la session se déroule sur un terminal relié au port modem (paragraphe 4.10) | écran et clavier de l'Apple IIGS |
+| `-TTY` | comme `-SERIE`, le terminal étant une télétype : les rubans passent par son lecteur et son perforateur (paragraphe 12.11) | le ruban est un fichier |
 
 Quelques précisions :
 
@@ -449,6 +453,7 @@ Quelques précisions :
 - **`-ID`.** Le nombre va de 0 à 65 499. Une identification qui n'a pas été définie (chapitre 11) est remplacée par 0.
 - **`-TEMP`.** Le nombre est un entier strictement positif.
 - **`-SERIE`.** Toute la session passe par le port modem : l'écran et le clavier de l'Apple IIGS ne servent plus. Si le port n'est pas disponible, LSE affiche `PORT SERIE INDISPONIBLE` et rend la main au shell.
+- **`-TTY`.** Comme `-SERIE` ; en plus, le ruban n'est plus un fichier : la lecture et la perforation se font au lecteur et au perforateur de la télétype. `-TTY` ne se combine donc pas avec `-RUBAN` (`OPTION INCORRECTE : -RUBAN`).
 
 Une option inconnue, une option à laquelle manque sa valeur, ou une valeur incorrecte arrête le lancement, sans ouvrir de session :
 
@@ -468,6 +473,7 @@ OPTION INCORRECTE : -ID 70000
 | `LSE -UNITE :DISQUETTE:LSE` | une disquette 3,5 pouces sert d'unité amovible |
 | `LSE -ID 0 -TEMP 400` | session sans droit d'écriture, espace temporaire de 400 secteurs |
 | `LSE -SERIE` | session sur un terminal relié au port modem |
+| `LSE -TTY` | session sur une télétype reliée au port modem, avec son lecteur et son perforateur de ruban |
 
 ### 2.5 Quitter LSE
 
@@ -495,7 +501,7 @@ Lancez LSE depuis le shell (chapitre 2), puis :
 
 | Vous tapez | L'écran affiche |
 |---|---|
-| `LSE` ‹RETURN› | `LSE F4`, puis `DATE HEURES MINUTES :` |
+| `LSE` ‹RETURN› | `LSE-IIGS 1.2`, `LSE F4`, puis `DATE HEURES MINUTES :` |
 | ‹RETURN› | `EN LIGNE....` |
 | `BO` ‹X-OFF› | `BONJOUR 06/11/26 14:30:05` et la bannière |
 
@@ -787,11 +793,13 @@ screen -fn /dev/cu.usbserial-XXXX 9600,cs8,-ixon,-ixoff
 LSE -SERIE
 ```
 
-L'écran de l'Apple IIGS affiche `LSE : SESSION SUR LE PORT SERIE`. Tout le reste se passe au terminal : la question de la date, `EN LIGNE....`, puis la session. Le clavier de l'Apple IIGS ne sert plus jusqu'à la fin de la session ; `AU REVOIR` rend la main au shell, sur l'écran de l'Apple IIGS. Les autres options (paragraphe 2.3) s'ajoutent comme d'habitude, par exemple `LSE -SERIE -T1600`.
+L'écran de l'Apple IIGS affiche `LSE-IIGS 1.2` et `LSE : SESSION SUR LE PORT SERIE`. Tout le reste se passe au terminal : la question de la date, `EN LIGNE....`, puis la session. Le clavier de l'Apple IIGS ne sert plus jusqu'à la fin de la session ; `AU REVOIR` rend la main au shell, sur l'écran de l'Apple IIGS. Les autres options (paragraphe 2.3) s'ajoutent comme d'habitude, par exemple `LSE -SERIE -T1600`.
 
 **Les touches au terminal.** Ce sont celles du paragraphe 4.9 : Ctrl-S pour ‹X-OFF›, Ctrl-Q pour ‹X-ON›, RETURN, ESC ; sous LSE F4, la touche DELETE du Mac termine aussi une saisie comme ‹X-OFF›, à condition qu'elle envoie le caractère DEL (c'est le réglage ordinaire de Terminal). Les flèches `←` et `↑` s'affichent comme le terminal affiche `_` et `^` : les terminaux de l'époque montraient des flèches, l'application Terminal montre `_` et `^`.
 
 **Interrompre.** ‹ESC› agit comme à l'écran (paragraphe 4.4). Pendant l'exécution d'un programme, LSE ne consulte le terminal que toutes les seize lignes exécutées : l'arrêt peut donc venir quelques lignes plus tard qu'à l'écran.
+
+**Une télétype.** Si le terminal est une télétype munie d'un lecteur et d'un perforateur de ruban, ou l'émulation d'une telle machine, lancez `LSE -TTY` : les rubans passent alors par la télétype (paragraphe 12.11).
 
 ---
 
@@ -2519,6 +2527,8 @@ Sur les télétypes des années 1970, un **ruban perforé** de papier gardait un
 
 Dans LSE-IIGS, le ruban est un **fichier texte**. `PERFORER` y écrit ; la lecture le relit comme une frappe au clavier. Le même fichier sert aux deux, comme on reportait le ruban du perforateur au lecteur.
 
+Avec une télétype reliée au port modem (option `-TTY`), le ruban redevient un ruban : paragraphe 12.11. Les paragraphes 12.2 à 12.10 décrivent le fichier-ruban.
+
 ### 12.2 Où est le ruban
 
 Par défaut, le ruban est le fichier `RUBAN` de la bibliothèque (`@:LSE:RUBAN`). L'option de lancement `-RUBAN chemin` en désigne un autre, n'importe où, par exemple sur une disquette :
@@ -2699,6 +2709,26 @@ Les caractères de code 17 à 21 (annexe C) étaient, sur la télétype, des ord
 | 21 | — | aucun à l'écran ; perforé si le perforateur est en marche |
 
 À la lecture, les caractères de code 10 (LF) et 0 (NUL) d'un ruban sont ignorés, le code 13 (CR) termine une saisie comme ‹RETURN›, le code 19 (X-OFF) comme ‹X-OFF›, et le code 27 (ESC) arrête le lecteur.
+
+Sous l'option `-TTY`, ces cinq caractères partent tels quels vers la télétype, dont ils commandent le lecteur et le perforateur (paragraphe 12.11).
+
+### 12.11 La télétype : option -TTY
+
+Une télétype ASR-33 portait un lecteur et un perforateur de ruban, que l'ordinateur commandait par les caractères du paragraphe 12.10. Lancé par `LSE -TTY`, LSE travaille avec une telle télétype, reliée au port modem comme un terminal (paragraphe 4.10), ou avec son émulation. Le fichier-ruban n'est alors jamais employé.
+
+**Réglages.** Au tableau de bord de l'Apple IIGS, réglez le port modem comme au paragraphe 4.10, sauf deux réglages : la **vitesse de la télétype** (110 bauds pour une ASR-33) et *Buffering* sur **non**. Sans tampon, LSE avance au pas de la télétype : ‹ESC› arrête un listage, une perforation ou un programme à la ligne suivante. Avec le tampon, l'Apple IIGS garde jusqu'à 2 048 caractères d'avance sur l'impression, et ‹ESC› n'agit qu'une fois ces caractères imprimés. En contrepartie, ce que l'on tape pendant que LSE travaille est perdu au-delà de trois caractères. Pour revenir à un terminal ordinaire (`-SERIE`), remettez *Buffering* sur oui. Avec un émulateur de télétype sur un Mac, vérifiez que l'adaptateur USB accepte la vitesse choisie : certains ne descendent pas sous 300 bauds.
+
+**Lire un ruban.** Placez le ruban dans le lecteur de la télétype et mettez le lecteur en marche (position *START*). À chaque fois qu'il attend une ligne, LSE envoie ‹X-ON›, qui met le lecteur en route ; le lecteur s'arrête de lui-même au ‹X-OFF› qui termine chaque ligne perforée. Ce qui vient du lecteur est traité exactement comme une frappe au clavier.
+
+- **Sous LSE F4 et `-T1600`**, les lignes lues s'impriment. Celles d'un ruban perforé par `PERFORER` sont séparées par une ligne blanche, comme sur les listages de l'époque.
+- **Sous `-MITRA15`**, tapez d'abord `RUBAN` : la lecture se fait en silence, sans rien imprimer, jusqu'à ‹ESC›, frappé ou perforé.
+- Le lecteur en position *FREE*, ou vide, laisse la main au clavier : c'est ainsi qu'on tape une réponse (par exemple un numéro d'identification) au milieu d'une lecture.
+
+Un émulateur qui ne connaît pas ces ordres lit le ruban d'un bout à l'autre dès qu'on le met en marche ; LSE garde les lignes reçues d'avance et les prend une à une.
+
+**Perforer.** `PERFORER A PARTIR DE 1` met le perforateur en marche, perfore une bande vierge, puis chaque ligne, une bande vierge, et arrête le perforateur. La télétype imprime ce qu'elle perfore : le listage n'apparaît qu'une fois. ‹ESC› interrompt la perforation, qui se termine tout de même par la bande vierge. Chaque ligne est perforée sous la forme ‹CR› ‹LF› texte ‹X-OFF›, comme sur les rubans de l'époque.
+
+**Un programme qui perfore.** Sous `-TTY`, `EQC(18)` et `EQC(20)` (paragraphe 12.8) commandent directement le perforateur de la télétype, qui perfore tout ce qu'elle imprime, y compris ce que l'on tape. LSE ne l'arrête pas au retour au moniteur : pensez à finir par `EQC(20)`.
 
 ---
 

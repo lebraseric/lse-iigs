@@ -21,6 +21,7 @@ static const char *const *reponses = 0;
 static unsigned int prochaine = 0;
 static unsigned int rang_interruption = 0;   /* 0 : jamais */
 static int echo = 1;
+static int echo_retour = 1;
 static unsigned int nb_consultations = 0;
 
 static void noter(const char *t, unsigned int n)
@@ -41,11 +42,17 @@ void bouchon_console(const char *const *lignes)
     rang_interruption = 0;
     nb_consultations = 0;
     echo = 1;
+    echo_retour = 1;
 }
 
 void console_echo(int vrai)
 {
     echo = vrai != 0;
+}
+
+void console_echo_retour(int vrai)
+{
+    echo_retour = vrai != 0;
 }
 
 /* ESC est vue à la rang-ième consultation de console_interruption (1 : la
@@ -87,6 +94,6 @@ unsigned int console_lire_ligne(char *tampon, unsigned int max, unsigned char *f
     memcpy(tampon, reponses[prochaine], n);
     prochaine++;
     if (echo) noter(tampon, n);          /* écho de la saisie */
-    if (*fin == SAISIE_RETURN) noter("\r\n", 2);
+    if (*fin == SAISIE_RETURN && echo_retour) noter("\r\n", 2);
     return n;
 }

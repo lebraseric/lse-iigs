@@ -38,6 +38,7 @@ typedef unsigned char ProfilImplantation;
 typedef struct {
     ProfilImplantation profil;
     unsigned char      libelles;   /* 1 : libellé après le code d'erreur (IMP-0186) */
+    unsigned char      teletype;   /* 1 : console télétype, option -TTY (IMP-0284) */
 } ConfigurationSession;
 
 extern ConfigurationSession configuration_session;

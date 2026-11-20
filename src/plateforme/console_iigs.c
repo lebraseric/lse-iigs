@@ -4,7 +4,7 @@
    IMP: IMP-0136 (adaptation isolée dans src/plateforme/), IMP-0220,
         IMP-0238 (X-OFF, RETURN, ESC), IMP-0239 (interruption), IMP-0240,
         IMP-0242 (registre du clavier avant le pilote), IMP-0273 (SystemError),
-        IMP-0281 (flèches), IMP-0283 (port série, -SERIE)
+        IMP-0281 (flèches), IMP-0283 (port série, -SERIE), IMP-0284 (télétype)
    Tests: tests/plateforme/sonde_console.c, tests/plateforme/sonde_serie.c ;
           essai sur cible (IIGS ou émulateur)
    Références : Apple IIGS GS/OS Reference, chap. 9 (Console Driver) ;
@@ -54,14 +54,17 @@ typedef struct {
     Word attente_initiale;
     Word attente_courante;
     int  echo;                         /* IMP-0254 : IDENTIFICATION, SILENCE */
+    int  echo_retour;                  /* RETURN passe à la ligne (IMP-0284) */
     int  epuisee;                      /* fin de l'entrée (IMP-0240, IMP-0283) */
     int  rubout;                       /* RUB-OUT vaut X-OFF (IMP-0238) */
     unsigned int compte;               /* arrivées depuis la dernière interrogation */
     unsigned int nb_avance;
     char avance[64];                   /* frappe d'avance (IMP-0239) */
+    int  apres_cr;                     /* dernier octet écrit : CR (IMP-0283) */
+    unsigned int periode;              /* une interrogation du port sur periode (IMP-0283, IMP-0284) */
 } Voie;
 
-static Voie voie = { VOIE_STDIO, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 };
+static Voie voie = { VOIE_STDIO, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 };
 
 int console_pilote(void)
 {
@@ -78,9 +81,23 @@ void console_echo(int vrai)
     voie.echo = vrai != 0;
 }
 
+void console_echo_retour(int vrai)
+{
+    voie.echo_retour = vrai != 0;
+}
+
 void console_rubout(int vrai)
 {
     voie.rubout = vrai != 0;
+}
+
+/* Télétype (IMP-0284) : le port est interrogé à chaque appel de
+   console_interruption. À 10 caractères par seconde, les 0,6 ms d'une
+   interrogation ne comptent pas, et ESC est vu à la ligne suivante, au lieu
+   de seize lignes plus loin (environ une minute à 110 bauds). */
+void console_teletype(void)
+{
+    if (voie.genre == VOIE_SERIE) voie.periode = 1;
 }
 
 static Word appel(int controle, Word code, Word *valeur)
@@ -101,6 +118,7 @@ static void ecrire_brut(const char *t, unsigned int n)
 {
     DIORecGS d;
     if (n == 0) return;
+    voie.apres_cr = t[n - 1] == CAR_CR;
     if (voie.genre == VOIE_STDIO) {
         fwrite(t, 1, n, stdout);
         fflush(stdout);
@@ -210,6 +228,7 @@ int console_ouvrir_serie(void)
     voie.dev = d;
     voie.ref = o.refNum;
     voie.compte = 0;
+    voie.periode = SERIE_PERIODE;
     return 1;
 }
 
@@ -311,12 +330,16 @@ void console_retour_chariot(void)
     ecrire_brut(cr, 1);
 }
 
-/* L'interligne seul passe au début de la ligne suivante (IMP-0220). */
+/* L'interligne seul passe au début de la ligne suivante (IMP-0220) : CR LF.
+   Juste après un CR, LF suffit : le retour chariot puis l'interligne d'une fin
+   de ligne donnent CR LF, non CR CR LF, que perforerait un terminal série
+   (IMP-0283, essai 6.12 du 2026-11-19). */
 void console_interligne(void)
 {
     static const char crlf[2] = { CAR_CR, CAR_LF };
     if (voie.genre == VOIE_STDIO) { ecrire_brut("\n", 1); return; }
-    ecrire_brut(crlf, 2);
+    if (voie.apres_cr) ecrire_brut(crlf + 1, 1);
+    else ecrire_brut(crlf, 2);
 }
 
 void console_bip(void)
@@ -338,7 +361,8 @@ unsigned int console_lire_ligne(char *tampon, unsigned int max, unsigned char *f
         if (c == CAR_CR || c == CAR_XOFF || c == CAR_ESC) {
             curseur_effacer();
             *fin = c == CAR_CR ? SAISIE_RETURN : c == CAR_XOFF ? SAISIE_XOFF : SAISIE_ESC;
-            if (c == CAR_CR && voie.genre != VOIE_STDIO) console_interligne();   /* écho de RETURN */
+            if (c == CAR_CR && voie.genre != VOIE_STDIO && voie.echo_retour)
+                console_interligne();                    /* écho de RETURN */
             return n;
         }
         if (c == CAR_XON && n == 0) {                    /* lecteur de ruban (IMP-0263) */
@@ -361,7 +385,8 @@ unsigned int console_lire_ligne(char *tampon, unsigned int max, unsigned char *f
 /* Registre du clavier de l'Apple IIGS : bit 7 à 1 tant qu'une touche frappée
    n'a pas été lue par le pilote (IMP-0242). Lecture seule ; $C010 n'est
    jamais touché à l'écran ; à la fin d'une session série, il est écrit pour
-   jeter la touche ignorée (IMP-0283). Le port série est interrogé une fois sur SERIE_PERIODE
+   jeter la touche ignorée (IMP-0283). Le port série est interrogé une fois sur SERIE_PERIODE,
+   à chaque appel sous -TTY (IMP-0284 ; console_teletype)
    (IMP-0283) : un GetDeviceStatus coûte 0,6 ms sur l'Apple IIGS. Le clavier
    du IIGS n'est pas lu pendant une session série. */
 #define CLAVIER ((volatile unsigned char *) 0xE0C000L)
@@ -372,7 +397,7 @@ int console_interruption(void)
     int c;
     if (voie.genre == VOIE_ECRAN && (*CLAVIER & 0x80) == 0) return 0;   /* aucune touche */
     if (voie.genre == VOIE_SERIE) {
-        if (++voie.compte < SERIE_PERIODE) return 0;
+        if (++voie.compte < voie.periode) return 0;
         voie.compte = 0;
     }
     while ((c = lire_clavier(0)) >= 0) {

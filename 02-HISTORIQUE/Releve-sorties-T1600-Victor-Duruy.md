@@ -79,3 +79,20 @@ Chronologie : Éric ne reprenait pas ses programmes d'une année sur l'autre ; l
 6. **Ligne vide** comme fin de boucle (`121`, `122`, `18`, `29`…), conforme à INRDP75.
 7. **Chaîne de plus de 255 caractères** : `FICH2`, enregistrement 8 (4EME - PRO, `Fichier de données FICH2 - Sortie du programme PERFO - numerisation0011.pdf`) : type chaîne, quatre lignes de 68, 70, 67 et 66 caractères, soit 274 avec leurs espaces, 271 sans. INRDP75 (l. 817) limite les chaînes à 255 caractères sur T1600 ; la borne de `LSE F4` n'est pas connue. Voir Données IMP-0209 et `Reconstitution-PERFO-CHARG/README.md`.
 8. **Réels de 23 bits** : avec la réponse 7, `NBOR` (5EME - NBOR, `numerisation0024.pdf`) imprime quatorze valeurs, de `3.645752` à `2.618034`, puis `1.618034` et `14 ØPERATIØNS`. Des réels de 24 bits (IEEE) donnent 16 opérations ; 23 bits significatifs, la demie arrondie en s'éloignant de zéro, en donnent 14 et reproduisent 13 des 14 valeurs (`3.645751` au lieu de `3.645752`) ; les mêmes réels reproduisent 12 des 16 témoins d'INRDP75 sur `+ − × ÷` et puissances entières. Réalisé sous `LSE F4` et `-T1600` (Interpréteur IMP-0280 ; `05-IMPLEMENTATION/audits/Analyse_reels_T1600_2026-11-05.md`). Confirmé par le dossier dactylographié de PRO et PRON2 (`4EME - PRO/Exécution PRO-PRON2.pdf`) : note `9.565216 /20` = `11/(23/20)`, que donnent les réels de 23 bits (24 bits : `9.565218`).
+
+## 4. Matériel : la télétype
+
+Le modèle de la télétype de Victor Duruy n'est nommé par aucune source versée. Le tableau sépare ce qui est attesté de ce qui est déduit.
+
+| Point | Statut | Source |
+|---|---|---|
+| Consoles « du type « Télétype ASR 33 » » supposées par la définition du langage | attesté | LSE15 §9-1 (l. 2232) |
+| Teletype ASR33 au départ de la lignée (LSD, HP 2116, « 13 terminaux Télétypes ASR33 ») | attesté | Noyelle, *La saga du LSE* (l. 60) |
+| Teletype ASR33 vendue en France par Télémécanique | attesté | PATSTEC, fiche n° 1499, « Terminal / imprimante ASR33 », organisme ACONIT ([fiche](https://www.patstec.fr/ressources/objets/detail?id=26892)) |
+| Habillage Télémécanique : capot anguleux à deux étages, bandeau gris-vert portant « Telemecanique » et une étiquette « AC 1031… » (dernier chiffre illisible), papier en continu sortant par une fenêtre du dessus, lecteur et perforateur en façade à gauche surmontés de trois boutons sous une inscription illisible, bloc de quatre boutons à voyant à droite du clavier ; clavier à quatre rangées de touches cylindriques, celui d'une Teletype 33 | attesté | photo de la fiche PATSTEC n° 1499 |
+| Même modèle à côté du T1600 sur la photo d'ouverture des annexes d'INRDP75 (vue de dos : corps large, bloc supérieur plus étroit à dessus plat, papier sortant en haut vers l'arrière, appareil sur pied) ; une ASR-33 d'origine accompagne le MITRA 15 sur une autre photo d'INRDP75 | très probable : silhouette concordante | INRDP75, annexes (l. 6826) ; INRDP75 l. 8916 nomme « télé-imprimante » l'appareil du T1600 et « télétype » celui du MITRA 15 |
+| Ce modèle à Victor Duruy | très probable | souvenir d'Éric (2026-11-07) ; sorties concordantes : 72 colonnes et surimpression en 72ᵉ position (INRDP75 l. 3854), 10 caractères et 6 lignes par pouce, majuscules seules, lecteur et perforateur commandés par DC1 à DC4 (INRDP75 l. 8988-8991), passage en local (l. 8581-8583) |
+| Lettre O imprimée `Ø`, zéro non barré | compatible | le cylindre d'impression de la Teletype 33 existait dans cette variante, d'après des témoignages non vérifiés sur les bulletins Teletype (liste cctalk, avril 2022, « Slashed letter O, unslashed letter zero ») |
+| Fonction des trois boutons au-dessus du lecteur-perforateur : avance du ruban, coupe, départ de la lecture (pendant manuel du X-ON) | à vérifier | souvenir d'Éric, incertain ; sur l'ASR-33 d'origine, le perforateur porte ON, OFF, REL, B.SP et le lecteur une manette START, STOP, FREE |
+
+Vérifications possibles : demander à l'ACONIT (Grenoble), qui détient l'objet, le libellé des boutons et de l'étiquette ; chercher la référence « AC 1031x » dans un catalogue Télémécanique.
